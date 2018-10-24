@@ -3,28 +3,24 @@
 namespace ReverseRegex\Generator;
 
 use PHPStats\Generator\GeneratorInterface;
-use ReverseRegex\Exception as GeneratorException;
+use ReverseRegex;
 
 /**
- * Base Class for Scopes
+ * Class Scope
+ * @package ReverseRegex\Generator
+ *
+ * Base class for Scopes
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
  * @since 0.0.1
  */
 class Scope extends Node implements ContextInterface, RepeatInterface, AlternateInterface
 {
+    public const REPEAT_MIN_INDEX = 'repeat_min';
+    public const REPEAT_MAX_INDEX = 'repeat_max';
+    public const USE_ALTERNATING_INDEX = 'use_alternating';
 
-    const REPEAT_MIN_INDEX = 'repeat_min';
-
-    const REPEAT_MAX_INDEX = 'repeat_max';
-
-    const USE_ALTERNATING_INDEX = 'use_alternating';
-
-
-    /**
-     *  Class Constructor
-     */
-    public function __construct($label = 'node')
+    public function __construct(string $label = 'node')
     {
         parent::__construct($label);
 
@@ -34,17 +30,15 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
         $this->setMaxOccurrences(1);
     }
 
-
-    //  ----------------------------------------------------------------------------
-    # Conext Interface
-
     /**
      * {@inheritdoc}
+     *
+     * @throws ReverseRegex\Exception
      */
     public function generate(string &$result, GeneratorInterface $generator): void
     {
         if ($this->count() === 0) {
-            throw new GeneratorException('No child scopes to call must be atleast 1');
+            throw new ReverseRegex\Exception('No child scopes to call must be at least 1');
         }
 
         $repeat_x = $this->calculateRepeatQuota($generator);
@@ -63,19 +57,16 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
 
             $repeat_x = $repeat_x - 1;
         }
-
-
-        return $result;
     }
 
-
     /**
-     *  Fetch a node given an `one-based index`
+     * Fetch a node given an `one-based index`
      *
-     * @access public
-     * @return Scope | null if none found
+     * @param int $index
+     *
+     * @return Scope|null
      */
-    public function get($index)
+    public function get(int $index): ?Scope
     {
         if ($index > $this->count() || $index <= 0) {
             return null;
@@ -90,121 +81,77 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
         return $this->current();
     }
 
-
-    //  ----------------------------------------------------------------------------
-    # Repeat Interface
-
     /**
-     * Fetches the max occurances
-     *
-     * @access public
-     * @return integer the maximum number of occurances
+     * {@inheritdoc}
      */
-    public function getMaxOccurrences()
+    public function getMaxOccurrences(): int
     {
-        return $this[self::REPEAT_MAX_INDEX];
+        return $this[static::REPEAT_MAX_INDEX];
     }
 
     /**
-     *  Sets the maximum re-occurances
-     *
-     * @access public
-     *
-     * @param integer $num
+     * {@inheritdoc}
      */
-    public function setMaxOccurrences($num)
+    public function setMaxOccurrences(int $number): void
     {
-        if (is_integer($num) === false) {
-            throw new GeneratorException('Number must be an integer');
-        }
-
-        $this[self::REPEAT_MAX_INDEX] = $num;
+        $this[static::REPEAT_MAX_INDEX] = $number;
     }
 
     /**
-     *  Fetch the Minimum Occurances
-     *
-     * @access public
-     * @return integer
+     * {@inheritdoc}
      */
-    public function getMinOccurrences()
+    public function getMinOccurrences(): int
     {
-        return $this[self::REPEAT_MIN_INDEX];
+        return $this[static::REPEAT_MIN_INDEX];
     }
 
     /**
-     *  Sets the Minimum number of re-occurances
-     *
-     * @access public
-     *
-     * @param integer $num
+     * {@inheritdoc}
      */
-    public function setMinOccurrences($num)
+    public function setMinOccurrences(int $num): void
     {
-        if (is_integer($num) === false) {
-            throw new GeneratorException('Number must be an integer');
-        }
-
-        $this[self::REPEAT_MIN_INDEX] = $num;
+        $this[static::REPEAT_MIN_INDEX] = $num;
     }
 
-
     /**
-     *  Return the occurance range
-     *
-     * @access public
-     * @return integer the range
+     * {@inheritdoc}
      */
-    public function getOccurrenceRange()
+    public function getOccurrenceRange(): int
     {
-        return (integer)($this->getMaxOccurrences() - $this->getMinOccurrences());
+        return $this->getMaxOccurrences() - $this->getMinOccurrences();
     }
 
-
     /**
-     *  Calculate a random numer of repeats given the current min-max range
-     *
-     * @access public
+     * Calculate a random number of repeats given the current min-max range
      *
      * @param GeneratorInterface $generator
      *
-     * @return Integer
+     * @return int
      */
-    public function calculateRepeatQuota(GeneratorInterface $generator)
+    public function calculateRepeatQuota(GeneratorInterface $generator): int
     {
-        $repeat_x = $this->getMinOccurrences();
+        $repeatX = $this->getMinOccurrences();
 
         if ($this->getOccurrenceRange() > 0) {
-            $repeat_x = (integer)\round($generator->generate($this->getMinOccurrences(), $this->getMaxOccurrences()));
+            $repeatX = (int)\round($generator->generate($this->getMinOccurrences(), $this->getMaxOccurrences()));
         }
 
-        return $repeat_x;
-    }
-
-    //------------------------------------------------------------------
-    # AlternateInterface
-
-
-    /**
-     *  Tell the scope to select childing use alternating strategy
-     *
-     * @access public
-     * @return void
-     */
-    public function useAlternatingStrategy()
-    {
-        $this[self::USE_ALTERNATING_INDEX] = true;
+        return $repeatX;
     }
 
     /**
-     *  Return true if setting been activated
-     *
-     * @access public
-     * @return boolean true
+     * {@inheritdoc}
      */
-    public function usingAlternatingStrategy()
+    public function useAlternatingStrategy(): void
     {
-        return (boolean)$this[self::USE_ALTERNATING_INDEX];
+        $this[static::USE_ALTERNATING_INDEX] = true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function usingAlternatingStrategy(): bool
+    {
+        return $this[static::USE_ALTERNATING_INDEX];
     }
 }
-/* End of File */

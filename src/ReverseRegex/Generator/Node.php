@@ -7,6 +7,9 @@ namespace ReverseRegex\Generator;
  * @package ReverseRegex\Generator
  *
  * Base to all Generator Scopes
+ *
+ * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @since 0.0.1
  */
 class Node implements \ArrayAccess, \Countable, \Iterator
 {

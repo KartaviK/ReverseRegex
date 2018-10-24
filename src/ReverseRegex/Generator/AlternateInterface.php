@@ -3,6 +3,9 @@
 namespace ReverseRegex\Generator;
 
 /**
+ * Interface AlternateInterface
+ * @package ReverseRegex\Generator
+ *
  * Allows a scope to select children using alternating strategy
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>

@@ -9,6 +9,9 @@ use PHPStats\Generator\GeneratorInterface;
  * @package ReverseRegex\Generator
  *
  * Context interface for Generator
+ *
+ * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @since 0.0.1
  */
 interface ContextInterface
 {

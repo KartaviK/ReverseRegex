@@ -7,6 +7,9 @@ namespace ReverseRegex\Generator;
  * @package ReverseRegex\Generator
  *
  * Represent a group has max and min number of occurrences
+ *
+ * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @since 0.0.1
  */
 interface RepeatInterface
 {
@@ -20,11 +23,9 @@ interface RepeatInterface
     /**
      * Set the max re-occurrences
      *
-     * @param $num
-     *
-     * @return int
+     * @param int $number
      */
-    public function setMaxOccurrences($num): int;
+    public function setMaxOccurrences(int $number): void;
 
     /**
      * Fetch the Minimum re-occurrences
@@ -36,9 +37,9 @@ interface RepeatInterface
     /**
      * Sets the Minimum number of re-occurrences
      *
-     * @param integer $num
+     * @param int $num
      */
-    public function setMinOccurrences($num): void;
+    public function setMinOccurrences(int $num): void;
 
     /**
      * Return the occurrence range

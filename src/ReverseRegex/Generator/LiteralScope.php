@@ -2,26 +2,28 @@
 
 namespace ReverseRegex\Generator;
 
-use ReverseRegex\Exception;
+use ReverseRegex;
 use PHPStats\Generator\GeneratorInterface;
-use ReverseRegex\ArrayCollection;
 
 /**
  * Class LiteralScope
  * @package ReverseRegex\Generator
  *
  * Scope for Literal Values
+ *
+ * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @since 0.0.1
  */
 class LiteralScope extends Scope
 {
-    /**@var ArrayCollection */
+    /**@var ReverseRegex\ArrayCollection */
     protected $literals;
 
     public function __construct(string $label = 'label')
     {
         parent::__construct($label);
 
-        $this->literals = new ArrayCollection();
+        $this->literals = new ReverseRegex\ArrayCollection();
     }
 
     /**
@@ -48,9 +50,9 @@ class LiteralScope extends Scope
     /**
      * Return the literal ArrayCollection
      *
-     * @return ArrayCollection
+     * @return ReverseRegex\ArrayCollection
      */
-    public function getLiterals(): ArrayCollection
+    public function getLiterals(): ReverseRegex\ArrayCollection
     {
         return $this->literals;
     }
@@ -58,12 +60,12 @@ class LiteralScope extends Scope
     /**
      * {@inheritdoc}
      *
-     * @throws Exception
+     * @throws ReverseRegex\Exception
      */
     public function generate(string &$result, GeneratorInterface $generator): void
     {
         if ($this->literals->count() === 0) {
-            throw new Exception('There are no literals to choose from');
+            throw new ReverseRegex\Exception('There are no literals to choose from');
         }
 
         $repeat_x = $this->calculateRepeatQuota($generator);
@@ -72,7 +74,7 @@ class LiteralScope extends Scope
             $randomIndex = 0;
 
             if ($this->literals->count() > 1) {
-                $randomIndex = \round($generator->generate(1, ($this->literals->count())));
+                $randomIndex = \round($generator->generate(1, $this->literals->count()));
             }
 
             $result .= $this->literals->getAt($randomIndex);
