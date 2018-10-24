@@ -12,12 +12,12 @@ use ReverseRegex\Exception as ReverseRegexException;
 class MersenneRandom implements GeneratorInterface
 {
     /**
-      *  @var integer a seed use count 
+      *  @var integer a seed use count
       */
     protected $index;
     
     /**
-      *  @var integer the seed value to use 
+      *  @var integer the seed value to use
       */
     protected $seed;
     
@@ -27,12 +27,12 @@ class MersenneRandom implements GeneratorInterface
     protected $ps;
     
     /**
-      *  @var integer the max 
+      *  @var integer the max
       */
     protected $max;
     
     /**
-      *  @var integer the min 
+      *  @var integer the min
       */
     protected $min;
     
@@ -49,13 +49,11 @@ class MersenneRandom implements GeneratorInterface
     
     public function max($value = null)
     {
-        if($value === null && $this->max === null) {
+        if ($value === null && $this->max === null) {
             $max = 2147483647;
-        }
-        elseif($value === null) {
+        } elseif ($value === null) {
             $max = $this->max;
-        }
-        else {
+        } else {
             $max = $this->max = $value;
         }
         
@@ -65,37 +63,35 @@ class MersenneRandom implements GeneratorInterface
     
     public function min($value = null)
     {
-        if($value === null && $this->max === null) {
+        if ($value === null && $this->max === null) {
             $min = 0;
-        }
-        elseif($value === null) {
+        } elseif ($value === null) {
             $min = $this->min;
-        }
-        else {
+        } else {
             $min = $this->min = $value;
         }
         
         return $min;
     }
     
-    public function generate($min = 0,$max = null)
+    public function generate($min = 0, $max = null)
     {
-        if($max === null) {
+        if ($max === null) {
             $max = $this->max;
         }
         
-        if($min === null) {
+        if ($min === null) {
             $min = $this->min;
         }
         
-        return abs($this->mt(++$this->index,$min,$max));
+        return abs($this->mt(++$this->index, $min, $max));
     }
     
     
     public function seed($seed = null)
     {
-        if($seed === null){
-            $seed = mt_rand(0,PHP_INT_MAX);    
+        if ($seed === null) {
+            $seed = mt_rand(0, PHP_INT_MAX);
         }
         
         $this->seed = $seed;
@@ -116,7 +112,7 @@ class MersenneRandom implements GeneratorInterface
     * @return float the random number
     * @link http://boxrefuge.com/?tag=random-number
     * @author Justin unknown
-    * 
+    *
     **/
     public function mt($index = null, $min = 0, $max = 1000)
     {
@@ -124,14 +120,14 @@ class MersenneRandom implements GeneratorInterface
         static $mt = array(); // 624 element array used to get random numbers
      
         // Regenerate when reseeding or seeding initially
-        if($this->seed !== $this->ps)
-        {
+        if ($this->seed !== $this->ps) {
             $s = $this->seed & 0xffffffff;
             $mt = array(&$s, 624 => &$s);
             $this->ps = $this->seed;
      
-            for($i = 1; $i < 624; ++$i)
+            for ($i = 1; $i < 624; ++$i) {
                 $mt[$i] = (0x6c078965 * ($mt[$i - 1] ^ ($mt[$i - 1] >> 30)) + $i) & 0xffffffff;
+            }
      
             // This has been tweaked for maximum speed and elegance
             // Explanation of possibly confusing variables:
@@ -140,10 +136,8 @@ class MersenneRandom implements GeneratorInterface
             //   $n = number to iterate to - we loop up to 227 adding 397 after which we finish looping up to 624 subtracting 227 to continue getting out 397 indices ahead reference
             //   $m = 397 or -227 to add to $i to keep our 397 index difference
             //   $i = the previous element in $sp, our starting index in this iteration
-            for($j = 1, $sp = array(0, 227, 397); $j < count($sp); ++$j)
-            {
-                for($p = $j - 1, $i = $sp[$p], $m = ((624 - $sp[$j]) * ($p ? -1 : 1)), $n = ($sp[$j] + $sp[$p]); $i < $n; ++$i)
-                {
+            for ($j = 1, $sp = array(0, 227, 397); $j < count($sp); ++$j) {
+                for ($p = $j - 1, $i = $sp[$p], $m = ((624 - $sp[$j]) * ($p ? -1 : 1)), $n = ($sp[$j] + $sp[$p]); $i < $n; ++$i) {
                     $y = ($mt[$i] & 0x80000000) | ($mt[$i + 1] & 0x7fffffff);
                     $mt[$i] = $mt[$i + $m] ^ ($y >> 1) ^ $op[$y & 0x1];
                 }
@@ -159,8 +153,5 @@ class MersenneRandom implements GeneratorInterface
      
         return $y % ($max - $min + 1) + $min;
     }
-    
-
-    
 }
 /* End of File */

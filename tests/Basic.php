@@ -9,10 +9,9 @@ abstract class Basic extends TestCase
 {
     public function createApplication()
     {
-        $boot = new PimpleBootstrap(); 
-        $pimple = $boot->boot(new Pimple());  
+        $boot = new PimpleBootstrap();
+        $pimple = $boot->boot(new Pimple());
         return $pimple;
     }
-    
 }
 /* End of File */

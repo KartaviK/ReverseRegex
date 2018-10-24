@@ -15,19 +15,18 @@ class ShortTest extends Basic
         $lexer = new Lexer('\d');
         $scope = new Scope();
         $parser = new Short();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        foreach($result as $value) {
-            $this->assertRegExp('/\d/',$value);
+        foreach ($result as $value) {
+            $this->assertRegExp('/\d/', $value);
         }
-        
     }
     
     public function testNotDigit()
@@ -35,19 +34,18 @@ class ShortTest extends Basic
         $lexer = new Lexer('\D');
         $scope = new Scope();
         $parser = new Short();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        foreach($result as $value) {
-            $this->assertRegExp('/\D/',$value);
+        foreach ($result as $value) {
+            $this->assertRegExp('/\D/', $value);
         }
-        
     }
     
     public function testWhitespace()
@@ -55,16 +53,16 @@ class ShortTest extends Basic
         $lexer = new Lexer('\s');
         $scope = new Scope();
         $parser = new Short();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        foreach($result as $value) {
+        foreach ($result as $value) {
             $this->assertTrue(!empty($value));
         }
     }
@@ -74,16 +72,16 @@ class ShortTest extends Basic
         $lexer = new Lexer('\S');
         $scope = new Scope();
         $parser = new Short();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        foreach($result as $value) {
+        foreach ($result as $value) {
             $this->assertTrue(!empty($value));
         }
     }
@@ -93,19 +91,18 @@ class ShortTest extends Basic
         $lexer = new Lexer('\w');
         $scope = new Scope();
         $parser = new Short();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        foreach($result as $value) {
-            $this->assertRegExp('/\w/',$value);
+        foreach ($result as $value) {
+            $this->assertRegExp('/\w/', $value);
         }
-        
     }
     
     
@@ -114,20 +111,18 @@ class ShortTest extends Basic
          $lexer = new Lexer('\W');
         $scope = new Scope();
         $parser = new Short();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        foreach($result as $value) {
-            $this->assertRegExp('/\W/',$value);
+        foreach ($result as $value) {
+            $this->assertRegExp('/\W/', $value);
         }
-        
-        
     }
   
   
@@ -137,21 +132,17 @@ class ShortTest extends Basic
         $lexer = new Lexer('.');
         $scope = new Scope();
         $parser = new Short();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
 
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
         
         // match 0..127 char in ASSCI Chart
-        $this->assertCount(128,$result);
-        
-        
+        $this->assertCount(128, $result);
     }
-    
-    
 }
 /* End of File */

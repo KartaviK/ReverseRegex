@@ -14,15 +14,14 @@ class ParserTest extends Basic
         $lexer = new Lexer('ex1{5,5}');
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
-        $generator->generate($result,$random);
+        $generator->generate($result, $random);
         
-        $this->assertEquals('ex11111',$result);
-        
+        $this->assertEquals('ex11111', $result);
     }
     
     
@@ -34,15 +33,14 @@ class ParserTest extends Basic
         
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
-        $generator->generate($result,$random);
+        $generator->generate($result, $random);
         
-        $this->assertEquals('(02)(04)(02)(08)',$result);
-        
+        $this->assertEquals('(02)(04)(02)(08)', $result);
     }
     
     public function testExampleC()
@@ -50,15 +48,14 @@ class ParserTest extends Basic
         $lexer = new Lexer('509[0-9][A-K]');
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
         
-        $generator->generate($result,$random);
-        $this->assertEquals('5090J',$result);
-        
+        $generator->generate($result, $random);
+        $this->assertEquals('5090J', $result);
     }
     
     
@@ -67,15 +64,14 @@ class ParserTest extends Basic
         $lexer = new Lexer('\d\d\d');
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
         
-        $generator->generate($result,$random);
-        $this->assertRegExp('/\d\d\d/',$result);
-        
+        $generator->generate($result, $random);
+        $this->assertRegExp('/\d\d\d/', $result);
     }
     
     public function testExampleE()
@@ -83,15 +79,14 @@ class ParserTest extends Basic
         $lexer = new Lexer('\d\d\d([a-zA-Z])\w.');
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(10034343);
         
-        $generator->generate($result,$random);
-        $this->assertRegExp('/\d\d\d([a-zA-Z])\w./',$result);
-        
+        $generator->generate($result, $random);
+        $this->assertRegExp('/\d\d\d([a-zA-Z])\w./', $result);
     }
     
     public function testParserExamplePhoneNumber()
@@ -100,16 +95,14 @@ class ParserTest extends Basic
         
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
-        $generator->generate($result,$random);
+        $generator->generate($result, $random);
         
-        $this->assertEquals('(02)2595-1288',$result);
-        
-        
+        $this->assertEquals('(02)2595-1288', $result);
     }
     
     
@@ -130,50 +123,50 @@ class ParserTest extends Basic
         $lexer = new Lexer("(0[289][0-9]{2})|([1345689][0-9]{3})|(2[0-8][0-9]{2})|(290[0-9])|(291[0-4])|(7[0-4][0-9]{2})|(7[8-9][0-9]{2})");
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $random = new MersenneRandom(10789);
         
-        for($i = 100; $i > 0; $i--) {
+        for ($i = 100; $i > 0; $i--) {
             $result ='';
-            $generator->generate($result,$random);
-            $this->assertRegExp('/^(0[289][0-9]{2})|([1345689][0-9]{3})|(2[0-8][0-9]{2})|(290[0-9])|(291[0-4])|(7[0-4][0-9]{2})|(7[8-9][0-9]{2})$/',$result);
+            $generator->generate($result, $random);
+            $this->assertRegExp('/^(0[289][0-9]{2})|([1345689][0-9]{3})|(2[0-8][0-9]{2})|(290[0-9])|(291[0-4])|(7[0-4][0-9]{2})|(7[8-9][0-9]{2})$/', $result);
         }
         
-        # Generate Postcode for ACT only        
+        # Generate Postcode for ACT only
         
         $lexer = new Lexer('02[0-9]{2}|26[0-3][0-9]');
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
         
-        $generator->generate($result,$random);
-        $this->assertEquals('0225',$result);
+        $generator->generate($result, $random);
+        $this->assertEquals('0225', $result);
         
         $result ='';
-        $generator->generate($result,$random);
-        $this->assertEquals('2631',$result);
+        $generator->generate($result, $random);
+        $this->assertEquals('2631', $result);
         
         $result ='';
-        $generator->generate($result,$random);
-        $this->assertEquals('0288',$result);
+        $generator->generate($result, $random);
+        $this->assertEquals('0288', $result);
         
         $result ='';
-        $generator->generate($result,$random);
-        $this->assertEquals('0243',$result);
+        $generator->generate($result, $random);
+        $this->assertEquals('0243', $result);
         
         $result ='';
-        $generator->generate($result,$random);
-        $this->assertEquals('0284',$result);
+        $generator->generate($result, $random);
+        $this->assertEquals('0284', $result);
         
         $result ='';
-        $generator->generate($result,$random);
-        $this->assertEquals('0210',$result);
+        $generator->generate($result, $random);
+        $this->assertEquals('0210', $result);
     }
     
     
@@ -183,17 +176,16 @@ class ParserTest extends Basic
         $lexer = new Lexer("Hello|World|Is|Good");
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $random = new MersenneRandom(10789);
         
-        for($i = 10; $i > 0; $i--) {
+        for ($i = 10; $i > 0; $i--) {
             $result ='';
-            $generator->generate($result,$random);
-            $this->assertRegExp('/^Hello|World|Is|Good$/',$result);
+            $generator->generate($result, $random);
+            $this->assertRegExp('/^Hello|World|Is|Good$/', $result);
         }
-        
     }
     
     
@@ -203,31 +195,29 @@ class ParserTest extends Basic
         $lexer = new Lexer("(Hello){5,9}");
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $random = new MersenneRandom(10789);
         
-        for($i = 10; $i > 0; $i--) {
+        for ($i = 10; $i > 0; $i--) {
             $result ='';
-            $generator->generate($result,$random);
-            $this->assertRegExp('/(Hello){5,9}/',$result);
+            $generator->generate($result, $random);
+            $this->assertRegExp('/(Hello){5,9}/', $result);
         }
         
         $lexer = new Lexer("(Hello)?");
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $random = new MersenneRandom(107559);
       
         
         $result ='';
-        $generator->generate($result,$random);
-        $this->assertRegExp('/(Hello)?/',$result);
-        
-        
+        $generator->generate($result, $random);
+        $this->assertRegExp('/(Hello)?/', $result);
     }
     
     /**
@@ -240,14 +230,12 @@ class ParserTest extends Basic
         
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
-        $generator->generate($result,$random);
-        
-        
+        $generator->generate($result, $random);
     }
     
     /**
@@ -260,15 +248,12 @@ class ParserTest extends Basic
         
         $container = new Scope();
         $head = new Scope();
-        $parser = new Parser($lexer,$container,$head);
+        $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
         
         $result ='';
         $random = new MersenneRandom(100);
-        $generator->generate($result,$random);
-        
-        
+        $generator->generate($result, $random);
     }
-    
 }
 /* End of File */

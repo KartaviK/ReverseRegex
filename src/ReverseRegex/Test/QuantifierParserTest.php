@@ -18,11 +18,10 @@ class QuantifierParserTest extends Basic
         
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
+        $qual->parse($scope, $scope, $lexer);
         
-        $this->assertEquals(1,$scope->getMinOccurances());
-        $this->assertEquals(5,$scope->getMaxOccurances());
-            
+        $this->assertEquals(1, $scope->getMinOccurrences());
+        $this->assertEquals(5, $scope->getMaxOccurrences());
     }
     
     
@@ -36,11 +35,10 @@ class QuantifierParserTest extends Basic
         
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
+        $qual->parse($scope, $scope, $lexer);
         
-        $this->assertEquals(5,$scope->getMinOccurances());
-        $this->assertEquals(5,$scope->getMaxOccurances());
-        
+        $this->assertEquals(5, $scope->getMinOccurrences());
+        $this->assertEquals(5, $scope->getMaxOccurrences());
     }
     
     public function testQuantiferSpacesIncluded()
@@ -53,11 +51,10 @@ class QuantifierParserTest extends Basic
         
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
+        $qual->parse($scope, $scope, $lexer);
         
-        $this->assertEquals(1,$scope->getMinOccurances());
-        $this->assertEquals(5,$scope->getMaxOccurances());
-        
+        $this->assertEquals(1, $scope->getMinOccurrences());
+        $this->assertEquals(5, $scope->getMaxOccurrences());
     }
     
     /**
@@ -72,8 +69,7 @@ class QuantifierParserTest extends Basic
         $qual    = new Quantifier();
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
-        
+        $qual->parse($scope, $scope, $lexer);
     }
     
     /**
@@ -88,8 +84,7 @@ class QuantifierParserTest extends Basic
         $qual    = new Quantifier();
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
-        
+        $qual->parse($scope, $scope, $lexer);
     }
     
      /**
@@ -104,8 +99,7 @@ class QuantifierParserTest extends Basic
         $qual    = new Quantifier();
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
-        
+        $qual->parse($scope, $scope, $lexer);
     }
     
     /**
@@ -120,8 +114,7 @@ class QuantifierParserTest extends Basic
         $qual    = new Quantifier();
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
-        
+        $qual->parse($scope, $scope, $lexer);
     }
     
     
@@ -137,8 +130,7 @@ class QuantifierParserTest extends Basic
         $qual    = new Quantifier();
         
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
-        
+        $qual->parse($scope, $scope, $lexer);
     }
     
     
@@ -153,11 +145,10 @@ class QuantifierParserTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $qual->parse($scope,$scope,$lexer);
+        $qual->parse($scope, $scope, $lexer);
         
-        $this->assertEquals(0,$scope->getMinOccurances());
-        $this->assertEquals(PHP_INT_MAX,$scope->getMaxOccurances());
-        
+        $this->assertEquals(0, $scope->getMinOccurrences());
+        $this->assertEquals(PHP_INT_MAX, $scope->getMaxOccurrences());
     }
     
     
@@ -171,11 +162,10 @@ class QuantifierParserTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
+        $qual->parse($scope, $scope, $lexer);
         
-        $this->assertEquals(1,$scope->getMinOccurances());
-        $this->assertEquals(PHP_INT_MAX,$scope->getMaxOccurances());
-        
+        $this->assertEquals(1, $scope->getMinOccurrences());
+        $this->assertEquals(PHP_INT_MAX, $scope->getMaxOccurrences());
     }
     
     public function testQuestionQuantifier()
@@ -188,13 +178,10 @@ class QuantifierParserTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         $lexer->moveNext();
-        $qual->parse($scope,$scope,$lexer);
+        $qual->parse($scope, $scope, $lexer);
         
-        $this->assertEquals(0,$scope->getMinOccurances());
-        $this->assertEquals(1,$scope->getMaxOccurances());
-        
+        $this->assertEquals(0, $scope->getMinOccurrences());
+        $this->assertEquals(1, $scope->getMaxOccurrences());
     }
-    
-    
 }
 /* End of File */

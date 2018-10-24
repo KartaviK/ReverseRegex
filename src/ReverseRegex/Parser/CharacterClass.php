@@ -30,27 +30,25 @@ class CharacterClass implements StrategyInterface
         $collection = array();
         $unicode = new Unicode();
         
-        while($lexer->moveNext() && !$lexer->isNextToken(Lexer::T_SET_CLOSE)) {
-            
+        while ($lexer->moveNext() && !$lexer->isNextToken(Lexer::T_SET_CLOSE)) {
             $value = null;
             
-            switch(true) {
-                case($lexer->isNextTokenAny(array(Lexer::T_SHORT_UNICODE_X, Lexer::T_SHORT_P,Lexer::T_SHORT_X))):
+            switch (true) {
+                case ($lexer->isNextTokenAny(array(Lexer::T_SHORT_UNICODE_X, Lexer::T_SHORT_P,Lexer::T_SHORT_X))):
                     $collection[] = $unicode->evaluate($lexer);
-                break;
-                case($lexer->isNextTokenAny(array(Lexer::T_LITERAL_CHAR, Lexer::T_LITERAL_NUMERIC))):
+                    break;
+                case ($lexer->isNextTokenAny(array(Lexer::T_LITERAL_CHAR, Lexer::T_LITERAL_NUMERIC))):
                     $collection[] = $lexer->lookahead['value'];
-                break;
-                case($lexer->isNextToken(Lexer::T_SET_RANGE)):
+                    break;
+                case ($lexer->isNextToken(Lexer::T_SET_RANGE)):
                     $collection[] = '-';
-                break;
-                case($lexer->isNextToken(Lexer::T_ESCAPE_CHAR)):
+                    break;
+                case ($lexer->isNextToken(Lexer::T_ESCAPE_CHAR)):
                     $collection[] = '\\';
-                break;
-                default :
-                  throw new ParserException('Illegal meta character detected in character class');
+                    break;
+                default:
+                    throw new ParserException('Illegal meta character detected in character class');
             }
-            
         }
         
         /*
@@ -58,8 +56,7 @@ class CharacterClass implements StrategyInterface
             throw new ParserException('Closing character set token not found');
         } */
         
-        return '['. implode('',$collection) .']';
-        
+        return '['. implode('', $collection) .']';
     }
     
     
@@ -75,44 +72,44 @@ class CharacterClass implements StrategyInterface
       */
     public function parse(Scope $head, Scope $set, Lexer $lexer)
     {
-        if($lexer->lookahead['type'] !== Lexer::T_SET_OPEN) {
+        if ($lexer->lookahead['type'] !== Lexer::T_SET_OPEN) {
             throw new ParserException('Opening character set token not found');
         }
         
         $peek = $lexer->glimpse();
-        if($peek['type'] === Lexer::T_SET_NEGATED) {
+        if ($peek['type'] === Lexer::T_SET_NEGATED) {
              throw new ParserException('Negated Character Set ranges not supported at this time');
         }
         
-        $normal_lexer = new Lexer($this->normalize($head,$set,$lexer));
+        $normal_lexer = new Lexer($this->normalize($head, $set, $lexer));
         
-        while( $normal_lexer->moveNext() && !$normal_lexer->isNextToken(Lexer::T_SET_CLOSE)) {
+        while ($normal_lexer->moveNext() && !$normal_lexer->isNextToken(Lexer::T_SET_CLOSE)) {
             $glimpse = $normal_lexer->glimpse();
          
-            if($glimpse['type'] === Lexer::T_SET_RANGE) {
+            if ($glimpse['type'] === Lexer::T_SET_RANGE) {
                 continue; //value be included in range when `-` character is passed
             }
          
-            switch(true) {
-                case($normal_lexer->isNextToken(Lexer::T_SET_RANGE)) :
+            switch (true) {
+                case ($normal_lexer->isNextToken(Lexer::T_SET_RANGE)):
                     $range_start = $normal_lexer->token['value'];
                     
                     $normal_lexer->moveNext();
                     
-                    if($normal_lexer->isNextToken(Lexer::T_ESCAPE_CHAR)) {
+                    if ($normal_lexer->isNextToken(Lexer::T_ESCAPE_CHAR)) {
                         $normal_lexer->moveNext();
                     }
                     
                     $range_end =  $normal_lexer->lookahead['value'];
-                    $this->fillRange($head,$range_start,$range_end);
+                    $this->fillRange($head, $range_start, $range_end);
                     
-                break;    
-                case($normal_lexer->isNextToken(Lexer::T_LITERAL_NUMERIC) || $normal_lexer->isNextToken(Lexer::T_LITERAL_CHAR)) :
+                    break;
+                case ($normal_lexer->isNextToken(Lexer::T_LITERAL_NUMERIC) || $normal_lexer->isNextToken(Lexer::T_LITERAL_CHAR)):
                     $index = (integer)Utf8::ord($normal_lexer->lookahead['value']);
-                    $head->setLiteral($index,$normal_lexer->lookahead['value']);
-                break;
+                    $head->setLiteral($index, $normal_lexer->lookahead['value']);
+                    break;
                 default:
-                    # ignore     
+                    # ignore
             }
         }
         
@@ -128,23 +125,20 @@ class CharacterClass implements StrategyInterface
       *  @return void
       *  @access public
       */
-    public function fillRange(Scope $head,$start,$end)
+    public function fillRange(Scope $head, $start, $end)
     {
         
         $start_index  = Utf8::ord($start);
         $ending_index = Utf8::ord($end);
         
-        if($ending_index < $start_index ) {
-            throw new ParserException(sprintf('Character class range %s - %s is out of order',$start,$end));
+        if ($ending_index < $start_index) {
+            throw new ParserException(sprintf('Character class range %s - %s is out of order', $start, $end));
         }
         
-        for($i = $start_index; $i <= $ending_index; $i++) {
-            $head->setLiteral($i,Utf8::chr($i));
-        }    
+        for ($i = $start_index; $i <= $ending_index; $i++) {
+            $head->setLiteral($i, Utf8::chr($i));
+        }
     }
-  
-   
-    
 }
 
 

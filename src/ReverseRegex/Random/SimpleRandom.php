@@ -7,23 +7,23 @@ use ReverseRegex\Exception as ReverseRegexException;
   *  Simple Random
   *
   *  @link http://www.sitepoint.com/php-random-number-generator/
-  *  @author Craig Buckler 
+  *  @author Craig Buckler
   */
 class SimpleRandom implements GeneratorInterface
 {
     
     /**
-      *  @var integer the seed value to use 
+      *  @var integer the seed value to use
       */
     protected $seed = 0;
     
     /**
-      *  @var integer the max 
+      *  @var integer the max
       */
     protected $max;
     
     /**
-      *  @var integer the min 
+      *  @var integer the min
       */
     protected $min;
      
@@ -33,7 +33,7 @@ class SimpleRandom implements GeneratorInterface
       *  @return void
       *  @access public
       *  @param integer $seed
-      */ 
+      */
     public function __construct($seed = null)
     {
         if ($seed === null || $seed === 0) {
@@ -45,13 +45,11 @@ class SimpleRandom implements GeneratorInterface
      
     public function max($value = null)
     {
-        if($value === null && $this->max === null) {
+        if ($value === null && $this->max === null) {
             $max = 2147483647;
-        }
-        elseif($value === null) {
+        } elseif ($value === null) {
             $max = $this->max;
-        }
-        else {
+        } else {
             $max = $this->max = $value;
         }
         
@@ -61,13 +59,11 @@ class SimpleRandom implements GeneratorInterface
     
     public function min($value = null)
     {
-        if($value === null && $this->max === null) {
+        if ($value === null && $this->max === null) {
             $min = 0;
-        }
-        elseif($value === null) {
+        } elseif ($value === null) {
             $min = $this->min;
-        }
-        else {
+        } else {
             $min = $this->min = $value;
         }
         
@@ -80,15 +76,15 @@ class SimpleRandom implements GeneratorInterface
       *
       *  @param integer $seed the seed to use
       *  @access public
-      */  
+      */
     public function seed($seed = null)
-    {  
-        if($seed === null) {
+    {
+        if ($seed === null) {
             $seed = 0;
         }
         
-        return $this->seed = abs(intval($seed)) % 9999999 + 1;  
-    }  
+        return $this->seed = abs(intval($seed)) % 9999999 + 1;
+    }
     
     /**
       *  Generate a random numer
@@ -97,12 +93,12 @@ class SimpleRandom implements GeneratorInterface
       *  @param integer $max 2,796,203 largest possible max
       */
     public function generate($min = 0, $max = null)
-    {  
-        if($max === null) {
+    {
+        if ($max === null) {
             $max = 2796203;
         }
         
-        if($max > 2796203) {
+        if ($max > 2796203) {
             throw new ReverseRegexException('Max param has exceeded the maxium 2796203');
         }
         
@@ -110,11 +106,10 @@ class SimpleRandom implements GeneratorInterface
             $this->seed(mt_rand());
         }
         
-        $this->seed = ($this->seed * 125) % 2796203;  
+        $this->seed = ($this->seed * 125) % 2796203;
         
         
-        return $this->seed % ($max - $min + 1) + $min;  
-    }  
-    
+        return $this->seed % ($max - $min + 1) + $min;
+    }
 }
 /* End of File */

@@ -7,8 +7,8 @@ use ReverseRegex\Exception as ReverseRegexException;
   *   Generator Factory
   *
   *   @author Lewis Dyer <getintouch@icomefromthenet.com>
-  */    
-class GeneratorFactory 
+  */
+class GeneratorFactory
 {
     
     
@@ -23,7 +23,7 @@ class GeneratorFactory
         'simple'    => '\\ReverseRegex\\Random\\SimpleRandom',
     );
     
-    public static function registerExtension($index,$namespace)
+    public static function registerExtension($index, $namespace)
     {
         $index = strtolower($index);
         return self::$types[$index] = $namespace;
@@ -31,8 +31,8 @@ class GeneratorFactory
     
     public static function registerExtensions(array $extension)
     {
-        foreach($extension as $key => $ns) {
-            self::registerExtension($key,$ns);
+        foreach ($extension as $key => $ns) {
+            self::registerExtension($key, $ns);
         }
     }
     
@@ -46,26 +46,24 @@ class GeneratorFactory
       *  @return ReverseRegex\RandomInterface
       *  @throws PHPStats\Exception
       */
-    public function create($type,$seed = null)
+    public function create($type, $seed = null)
     {
         $type = strtolower($type);
         
         # check extension list
         
-        if(isset(self::$types[$type]) === true) {
+        if (isset(self::$types[$type]) === true) {
             # assign platform the full namespace
-            if(class_exists(self::$types[$type]) === false) {
-                throw new ReverseRegexException('Unknown Generator at::'.$type);    
+            if (class_exists(self::$types[$type]) === false) {
+                throw new ReverseRegexException('Unknown Generator at::'.$type);
             }
             
             $type = self::$types[$type];
-            
         } else {
             throw new ReverseRegexException('Unknown Generator at::'.$type);
         }
        
         return new $type($seed);
     }
-    
 }
 /* End of File */

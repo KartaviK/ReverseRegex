@@ -1,54 +1,49 @@
 <?php
+
 namespace ReverseRegex\Generator;
 
 /**
-  *  Represent a group has max and min number of occurances
-  *
-  *  @author Lewis Dyer <getintouch@icomefromthenet.com>
-  *  @since 0.0.1
-  */
+ * Interface RepeatInterface
+ * @package ReverseRegex\Generator
+ *
+ * Represent a group has max and min number of occurrences
+ */
 interface RepeatInterface
 {
     /**
-      * Fetches the max re-occurances
-      *
-      * @access public
-      * @return integer the maximum number of occurances
-      */    
-    public function getMaxOccurances();
-    
+     * Fetches the max re-occurrences
+     *
+     * @return int The max number of occurrences
+     */
+    public function getMaxOccurrences(): int;
+
     /**
-      *  Sets the maximum re-occurances
-      *
-      *  @access public
-      *  @param integer $num
-      */
-    public function setMaxOccurances($num);
-    
-    
+     * Set the max re-occurrences
+     *
+     * @param $num
+     *
+     * @return int
+     */
+    public function setMaxOccurrences($num): int;
+
     /**
-      *  Fetch the Minimum re-occurances
-      *
-      *  @access public
-      *  @return integer
-      */
-    public function getMinOccurances();
-    
+     * Fetch the Minimum re-occurrences
+     *
+     * @return int
+     */
+    public function getMinOccurrences(): int;
+
     /**
-      *  Sets the Minimum number of re-occurances
-      *
-      *  @access public
-      *  @param integer $num
-      */
-    public function setMinOccurances($num);
-    
+     * Sets the Minimum number of re-occurrences
+     *
+     * @param integer $num
+     */
+    public function setMinOccurrences($num): void;
+
     /**
-      *  Return the occurance range
-      *
-      *  @access public
-      *  @return integer the range
-      */
-    public function getOccuranceRange();
-    
+     * Return the occurrence range
+     *
+     * @return int the range
+     */
+    public function getOccurrenceRange(): int;
 }
-/* End of File */

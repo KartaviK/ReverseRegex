@@ -15,13 +15,13 @@ interface GeneratorInterface extends CommonInterface
       *  Generate a value between $min - $max
       *
       *  @param integer $max
-      *  @param integer $max 
+      *  @param integer $max
       */
-    public function generate($min = 0,$max = null);
+    public function generate($min = 0, $max = null);
     
     /**
       *  Set the seed to use
-      * 
+      *
       *  @param $seed integer the seed to use
       *  @access public
       */
@@ -34,6 +34,5 @@ interface GeneratorInterface extends CommonInterface
       *  @return double
       */
     public function max();
-    
 }
 /* End of File */

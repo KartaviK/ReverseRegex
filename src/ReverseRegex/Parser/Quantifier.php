@@ -25,25 +25,24 @@ class Quantifier implements StrategyInterface
       */
     public function parse(Scope $head, Scope $set, Lexer $lexer)
     {
-        switch(true) {
-            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_PLUS)) :
-                $head = $this->quantifyPlus($head,$set,$lexer);
-            break;
-            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_QUESTION)) :
-                $head = $this->quantifyQuestion($head,$set,$lexer);
-            break;
-            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_STAR)) :
-                $head = $this->quantifyStar($head,$set,$lexer);
-            break;
-             case ($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)) :
-                $head = $this->quantifyClosure($head,$set,$lexer);
-            break;
-            default :
+        switch (true) {
+            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_PLUS)):
+                $head = $this->quantifyPlus($head, $set, $lexer);
+                break;
+            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_QUESTION)):
+                $head = $this->quantifyQuestion($head, $set, $lexer);
+                break;
+            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_STAR)):
+                $head = $this->quantifyStar($head, $set, $lexer);
+                break;
+            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)):
+                $head = $this->quantifyClosure($head, $set, $lexer);
+                break;
+            default:
                 //do nothing no token matches found
         }
         
         return $head;
-        
     }
     
     
@@ -61,8 +60,8 @@ class Quantifier implements StrategyInterface
         $min = 1;
         $max = PHP_INT_MAX;
         
-        $head->setMaxOccurances($max);
-        $head->setMinOccurances($min);
+        $head->setMaxOccurrences($max);
+        $head->setMinOccurrences($min);
         
         return $head;
     }
@@ -81,8 +80,8 @@ class Quantifier implements StrategyInterface
         $min = 0;
         $max = PHP_INT_MAX;
         
-        $head->setMaxOccurances($max);
-        $head->setMinOccurances($min);
+        $head->setMaxOccurrences($max);
+        $head->setMinOccurrences($min);
         
         return $head;
     }
@@ -101,8 +100,8 @@ class Quantifier implements StrategyInterface
         $min = 0;
         $max = 1;
         
-        $head->setMaxOccurances($max);
-        $head->setMinOccurances($min);
+        $head->setMaxOccurrences($max);
+        $head->setMinOccurrences($min);
         
         return $head;
     }
@@ -120,14 +119,13 @@ class Quantifier implements StrategyInterface
     public function quantifyClosure(Scope $head, Scope $result, Lexer $lexer)
     {
         $tokens = array();
-        $min = $head->getMinOccurances();
-        $max = $head->getMaxOccurances();
+        $min = $head->getMinOccurrences();
+        $max = $head->getMaxOccurrences();
         
         # move to the first token inside the quantifer.
         # parse for the minimum , move lookahead until read end of the closure or the `,`
-        while($lexer->moveNext() === true && !$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE) && $lexer->lookahead['value'] !== ',' ) {
-
-            if($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)) {
+        while ($lexer->moveNext() === true && !$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE) && $lexer->lookahead['value'] !== ',') {
+            if ($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)) {
                 throw new ParserException('Nesting Quantifiers is not allowed');
             }
             $tokens[] = $lexer->lookahead;
@@ -136,16 +134,14 @@ class Quantifier implements StrategyInterface
         $min = $this->convertInteger($tokens);
         
         # do we have a maximum after the comma?
-        if($lexer->lookahead['value'] === ',' ) {
-        
+        if ($lexer->lookahead['value'] === ',') {
             # make sure we have values to gather ie not {778,}
             $tokens = array();
             
-             # move to the first token after the `,` character 
+             # move to the first token after the `,` character
             # grab the remaining numbers
-            while($lexer->moveNext() && !$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE)) {
-                
-                if($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)) {
+            while ($lexer->moveNext() && !$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE)) {
+                if ($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)) {
                     throw new ParserException('Nesting Quantifiers is not allowed');
                 }
                 
@@ -153,22 +149,20 @@ class Quantifier implements StrategyInterface
             }
             
             $max = $this->convertInteger($tokens);
-            
-        }
-        else {
+        } else {
             $max = $min;
         }
         
-        $head->setMaxOccurances($max);
-        $head->setMinOccurances($min);
+        $head->setMaxOccurrences($max);
+        $head->setMinOccurrences($min);
         
         # skip the lexer to the closing token
         $lexer->skipUntil(Lexer::T_QUANTIFIER_CLOSE);
         
         # check if the last matched token was the closing bracket
         # not going to stop errors like {#####,###{[a-z]} {#####{[a-z]}
-        if(!$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE)) {
-            throw new ParserException('Closing quantifier token `}` not found');     
+        if (!$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE)) {
+            throw new ParserException('Closing quantifier token `}` not found');
         }
         
         return $head;
@@ -184,8 +178,10 @@ class Quantifier implements StrategyInterface
       */
     protected function convertInteger(array $tokens)
     {
-        $number_string = array_map(function($item) { return $item['value']; }, $tokens);
-        $number_string = trim(implode('',$number_string));
+        $number_string = array_map(function ($item) {
+            return $item['value'];
+        }, $tokens);
+        $number_string = trim(implode('', $number_string));
         
         $value = preg_match('/^(0|(-{0,1}[1-9]\d*))$/', $number_string);
 
@@ -195,6 +191,5 @@ class Quantifier implements StrategyInterface
         
         return intval($number_string);
     }
-    
 }
 /* End of File */

@@ -9,27 +9,27 @@ use ReverseRegex\Exception as ReverseRegexException;
  * Wrapper to mt_random with seed option
  *
  * Won't work when suhosin.srand.ignore = Off or suhosin.mt_srand.ignore = Off
- * is set. 
+ * is set.
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
- * 
+ *
  */
 class SrandRandom implements GeneratorInterface
 {
     
     /**
-      *  @var integer the seed to use on each pass 
+      *  @var integer the seed to use on each pass
       */
     protected $seed;
     
     
      /**
-      *  @var integer the max 
+      *  @var integer the max
       */
     protected $max;
     
     /**
-      *  @var integer the min 
+      *  @var integer the min
       */
     protected $min;
     
@@ -54,13 +54,11 @@ class SrandRandom implements GeneratorInterface
       */
     public function max($value = null)
     {
-        if($value === null && $this->max === null) {
+        if ($value === null && $this->max === null) {
             $max = getrandmax();
-        }
-        elseif($value === null) {
+        } elseif ($value === null) {
             $max = $this->max;
-        }
-        else {
+        } else {
             $max = $this->max = $value;
         }
         
@@ -70,13 +68,11 @@ class SrandRandom implements GeneratorInterface
     
     public function min($value = null)
     {
-        if($value === null && $this->max === null) {
+        if ($value === null && $this->max === null) {
             $min = 0;
-        }
-        elseif($value === null) {
+        } elseif ($value === null) {
             $min = $this->min;
-        }
-        else {
+        } else {
             $min = $this->min = $value;
         }
         
@@ -87,25 +83,25 @@ class SrandRandom implements GeneratorInterface
       *  Generate a value between $min - $max
       *
       *  @param integer $max
-      *  @param integer $max 
+      *  @param integer $max
       */
-    public function generate($min = 0,$max = null)
+    public function generate($min = 0, $max = null)
     {
-        if($max === null) {
+        if ($max === null) {
             $max = $this->max;
         }
         
-        if($min === null) {
+        if ($min === null) {
             $min = $this->min;
         }
         
         
-        return rand($min,$max);
+        return rand($min, $max);
     }
     
     /**
       *  Set the seed to use
-      * 
+      *
       *  @param $seed integer the seed to use
       *  @access public
       */
@@ -116,6 +112,5 @@ class SrandRandom implements GeneratorInterface
         
         return $this;
     }
-    
 }
 /* End of File */

@@ -1,37 +1,36 @@
 <?php
+
 namespace PHPStats\Generator;
 
 /**
-  *  Interface that all generators should implement
-  *
-  *  @access Lewis Dyer <getintouch@icomefromthenet.com>
-  */
+ * Interface GeneratorInterface
+ * @package PHPStats\Generator
+ *
+ * Interface that all generators should implement
+ */
 interface GeneratorInterface
 {
-    
     /**
-      *  Generate a value between $min - $max
-      *
-      *  @param integer $max
-      *  @param integer $max 
-      */
-    public function generate($min = 0,$max = null);
-    
+     * Generate random number between min and max values
+     *
+     * @param int $min
+     * @param int $max
+     *
+     * @return int
+     */
+    public function generate(int $min = 0, int $max = 0): int;
+
     /**
-      *  Set the seed to use
-      * 
-      *  @param $seed integer the seed to use
-      *  @access public
-      */
+     * Set the seed to use
+     *
+     * @param $seed integer the seed to use
+     */
     public function seed($seed = null);
-    
+
     /**
-      *  Return the hights possible random value
-      *
-      *  @access public
-      *  @return double
-      */
-    public function max();
-    
+     * Return the highest possible value
+     *
+     * @return float
+     */
+    public function max(): float;
 }
-/* End of File */

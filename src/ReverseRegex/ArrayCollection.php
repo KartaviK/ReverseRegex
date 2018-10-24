@@ -19,15 +19,15 @@ class ArrayCollection extends BaseCollection
         
         $this->clear();
         
-        foreach($values as $index => $value) {
-            $this->set($index,$value);
+        foreach ($values as $index => $value) {
+            $this->set($index, $value);
         }
         
         return $this;
     }
     
     /**
-      *  Fetch a value using ones based position 
+      *  Fetch a value using ones based position
       *
       *  @access public
       *  @param integer $position
@@ -35,22 +35,18 @@ class ArrayCollection extends BaseCollection
       */
     public function getAt($position)
     {
-        if($position < $this->count() && $position < 0) {
+        if ($position < $this->count() && $position < 0) {
             return null;
         }
         
         $this->first();
         
-        while($position > 1) {
+        while ($position > 1) {
             $this->next();
             --$position;
         }
         
         return $this->current();
     }
-    
-    
 }
 /* End of Class */
-
-

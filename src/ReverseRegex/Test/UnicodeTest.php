@@ -24,8 +24,7 @@ class UnicodeTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($scope,$scope,$lexer); 
-        
+        $parser->parse($scope, $scope, $lexer);
     }
     
     /**
@@ -42,8 +41,7 @@ class UnicodeTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($scope,$scope,$lexer); 
-        
+        $parser->parse($scope, $scope, $lexer);
     }
     
     /**
@@ -59,8 +57,7 @@ class UnicodeTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($scope,$scope,$lexer); 
-        
+        $parser->parse($scope, $scope, $lexer);
     }
     
     
@@ -77,9 +74,7 @@ class UnicodeTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($scope,$scope,$lexer); 
-        
-        
+        $parser->parse($scope, $scope, $lexer);
     }
     
     /**
@@ -95,8 +90,7 @@ class UnicodeTest extends Basic
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($scope,$scope,$lexer); 
-        
+        $parser->parse($scope, $scope, $lexer);
     }
     
     
@@ -105,17 +99,16 @@ class UnicodeTest extends Basic
         $lexer = new Lexer('\X{FA24}');
         $scope = new Scope();
         $parser = new Unicode();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        $this->assertEquals('﨤',$result[0]);
-        
+        $this->assertEquals('﨤', $result[0]);
     }
     
      /**
@@ -127,18 +120,16 @@ class UnicodeTest extends Basic
         $lexer = new Lexer('\x{64');
         $scope = new Scope();
         $parser = new Unicode();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        $this->assertEquals('d',$result[0]);
-        
-        
+        $this->assertEquals('d', $result[0]);
     }
     
     public function testShortX()
@@ -146,20 +137,16 @@ class UnicodeTest extends Basic
         $lexer = new Lexer('\x64');
         $scope = new Scope();
         $parser = new Unicode();
-        $head   = new LiteralScope('lit1',$scope);
+        $head   = new LiteralScope('lit1', $scope);
         
         $lexer->moveNext();
         $lexer->moveNext();
         
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $result = $head->getLiterals();
         
-        $this->assertEquals('d',$result[0]);
-        
-        
+        $this->assertEquals('d', $result[0]);
     }
-    
-    
 }
 /* End of File */

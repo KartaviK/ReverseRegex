@@ -19,10 +19,9 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $result = $parser->normalize($scope,$scope,$lexer);
+        $result = $parser->normalize($scope, $scope, $lexer);
         
-        $this->assertEquals('[a-mnop]',$result);
-        
+        $this->assertEquals('[a-mnop]', $result);
     }
     
     public function testNormalizeWithUnicodeValue()
@@ -34,10 +33,9 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $result = $parser->normalize($scope,$scope,$lexer);
+        $result = $parser->normalize($scope, $scope, $lexer);
         
-        $this->assertEquals('[\\ÿnop]',$result);
-        
+        $this->assertEquals('[\\ÿnop]', $result);
     }
     
     public function testNormalizeWithUnicodeRange()
@@ -49,10 +47,9 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $result = $parser->normalize($scope,$scope,$lexer);
+        $result = $parser->normalize($scope, $scope, $lexer);
         
-        $this->assertEquals('[\\ÿ-\\ÿmnop]',$result);
-        
+        $this->assertEquals('[\\ÿ-\\ÿmnop]', $result);
     }
    
    
@@ -64,9 +61,9 @@ class CharacterClassTest extends Basic
         $scope = new LiteralScope();
         $parser = new CharacterClass();
         
-        $parser->fillRange($scope,$start,$end);
+        $parser->fillRange($scope, $start, $end);
         
-        $this->assertEquals($range,implode('',$scope->getLiterals()->toArray()));
+        $this->assertEquals($range, implode('', $scope->getLiterals()->toArray()));
     }
     
     public function testFillRangeUnicode()
@@ -77,10 +74,9 @@ class CharacterClassTest extends Basic
         $scope = new LiteralScope();
         $parser = new CharacterClass();
         
-        $parser->fillRange($scope,$start,$end);
+        $parser->fillRange($scope, $start, $end);
         
-        $this->assertEquals($range,implode('',$scope->getLiterals()->toArray()));
-        
+        $this->assertEquals($range, implode('', $scope->getLiterals()->toArray()));
     }
     
     /**
@@ -94,8 +90,7 @@ class CharacterClassTest extends Basic
         $scope = new LiteralScope();
         $parser = new CharacterClass();
         
-        $parser->fillRange($scope,$start,$end);
-        
+        $parser->fillRange($scope, $start, $end);
     }
     
     
@@ -110,11 +105,11 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $values = $head->getLiterals()->toArray();
         
-        $this->assertEquals(array('a','m','n','o','p'),array_values($values));
+        $this->assertEquals(array('a','m','n','o','p'), array_values($values));
     }
     
     
@@ -127,12 +122,11 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $values = $head->getLiterals()->toArray();
         
-        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k'),array_values($values));
-        
+        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k'), array_values($values));
     }
     
     public function testParseNoUnicodeShortsMultiRange()
@@ -144,12 +138,11 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $values = $head->getLiterals()->toArray();
         
-        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k','l','m','n'),array_values($values));
-        
+        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k','l','m','n'), array_values($values));
     }
     
     public function testParseUnicodeShort()
@@ -161,11 +154,11 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $values = $head->getLiterals()->toArray();
         
-        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k'),array_values($values));
+        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k'), array_values($values));
     }
     
     public function testParseHexShort()
@@ -177,13 +170,11 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         $values = $head->getLiterals()->toArray();
         
-        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k'),array_values($values));
-        
-       
+        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k'), array_values($values));
     }
     
     public function testParseHexShortMultirange()
@@ -195,17 +186,16 @@ class CharacterClassTest extends Basic
         $parser = new CharacterClass();
         
         $lexer->moveNext();
-        $parser->parse($head,$scope,$lexer);
+        $parser->parse($head, $scope, $lexer);
         
         
         $values = $head->getLiterals()->getValues();
-        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','z'),$values);
-       
+        $this->assertEquals(array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','z'), $values);
     }
     
     /**
       *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Braces not supported here 
+      *  @expectedExceptionMessage Braces not supported here
       */
     public function testParseHexShortBraceError()
     {
@@ -216,9 +206,7 @@ class CharacterClassTest extends Basic
         
         
         $lexer->moveNext();
-        $parser->parse($head,$scope,$lexer);
-       
+        $parser->parse($head, $scope, $lexer);
     }
-    
 }
 /* End of File */

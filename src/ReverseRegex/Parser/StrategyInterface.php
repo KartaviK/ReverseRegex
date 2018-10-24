@@ -23,7 +23,5 @@ interface StrategyInterface
       *  @param ReverseRegex\Lexer $lexer
       */
     public function parse(Scope $head, Scope $set, Lexer $lexer);
-    
-    
 }
 /* End of File */
