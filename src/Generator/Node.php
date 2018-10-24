@@ -1,14 +1,15 @@
 <?php
 
-namespace ReverseRegex\Generator;
+namespace Kartavik\Kartigex\Generator;
 
 /**
  * Class Node
- * @package ReverseRegex\Generator
+ * @package Kartavik\Kartigex\Generator
  *
  * Base to all Generator Scopes
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
  */
 class Node implements \ArrayAccess, \Countable, \Iterator

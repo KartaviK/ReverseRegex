@@ -1,18 +1,19 @@
 <?php
 
-namespace ReverseRegex\Parser;
+namespace Kartavik\Kartigex\Parser;
 
-use ReverseRegex\Generator\Scope;
-use ReverseRegex\Lexer;
-use ReverseRegex\Exception as ParserException;
+use Kartavik\Kartigex\Generator\Scope;
+use Kartavik\Kartigex\Lexer;
+use Kartavik\Kartigex\Exception as ParserException;
 
 /**
  * Class Quantifier
- * @package ReverseRegex\Parser
+ * @package Kartavik\Kartigex\Parser
  *
  * Parse a group quantifer e.g (abghb){1,5} , (abghb){5} , (abghb)* , (abghb)? , (abghb)+
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
  */
 class Quantifier implements StrategyInterface

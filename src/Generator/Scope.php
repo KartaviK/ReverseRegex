@@ -1,17 +1,17 @@
 <?php
 
-namespace ReverseRegex\Generator;
+namespace Kartavik\Kartigex\Generator;
 
-use PHPStats\Generator\GeneratorInterface;
-use ReverseRegex;
+use Kartavik\Kartigex;
 
 /**
  * Class Scope
- * @package ReverseRegex\Generator
+ * @package Kartavik\Kartigex\Generator
  *
  * Base class for Scopes
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
  */
 class Scope extends Node implements ContextInterface, RepeatInterface, AlternateInterface

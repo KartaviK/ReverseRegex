@@ -1,14 +1,15 @@
 <?php
 
-namespace ReverseRegex\Generator;
+namespace Kartavik\Kartigex\Generator;
 
 /**
  * Interface RepeatInterface
- * @package ReverseRegex\Generator
+ * @package Kartavik\Kartigex\Generator
  *
  * Represent a group has max and min number of occurrences
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
  */
 interface RepeatInterface

@@ -1,29 +1,29 @@
 <?php
 
-namespace ReverseRegex\Generator;
+namespace Kartavik\Kartigex\Generator;
 
-use ReverseRegex;
-use PHPStats\Generator\GeneratorInterface;
+use Kartavik\Kartigex;
 
 /**
  * Class LiteralScope
- * @package ReverseRegex\Generator
+ * @package Kartavik\Kartigex\Generator
  *
  * Scope for Literal Values
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
  */
 class LiteralScope extends Scope
 {
-    /**@var ReverseRegex\ArrayCollection */
+    /**@var Kartigex\ArrayCollection */
     protected $literals;
 
     public function __construct(string $label = 'label')
     {
         parent::__construct($label);
 
-        $this->literals = new ReverseRegex\ArrayCollection();
+        $this->literals = new Kartigex\ArrayCollection();
     }
 
     /**
@@ -50,9 +50,9 @@ class LiteralScope extends Scope
     /**
      * Return the literal ArrayCollection
      *
-     * @return ReverseRegex\ArrayCollection
+     * @return Kartigex\ArrayCollection
      */
-    public function getLiterals(): ReverseRegex\ArrayCollection
+    public function getLiterals(): Kartigex\ArrayCollection
     {
         return $this->literals;
     }
@@ -60,12 +60,12 @@ class LiteralScope extends Scope
     /**
      * {@inheritdoc}
      *
-     * @throws ReverseRegex\Exception
+     * @throws Kartigex\Exception
      */
-    public function generate(string &$result, GeneratorInterface $generator): void
+    public function generate(string &$result, Kartigex\Random\GeneratorInterface $generator): void
     {
         if ($this->literals->count() === 0) {
-            throw new ReverseRegex\Exception('There are no literals to choose from');
+            throw new Kartigex\Exception('There are no literals to choose from');
         }
 
         $repeat_x = $this->calculateRepeatQuota($generator);

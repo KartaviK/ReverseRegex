@@ -1,17 +1,18 @@
 <?php
 
-namespace ReverseRegex\Parser;
+namespace Kartavik\Kartigex\Parser;
 
-use ReverseRegex;
+use Kartavik\Kartigex;
 use Patchwork\Utf8;
 
 /**
  * Class CharacterClass
- * @package ReverseRegex\Parser
+ * @package Kartavik\Kartigex\Parser
  *
  * Parse a character class [0-9][a-z]
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
  */
 class CharacterClass implements StrategyInterface
