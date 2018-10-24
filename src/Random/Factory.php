@@ -2,11 +2,11 @@
 
 namespace Kartavik\Kartigex\Random;
 
+use Kartavik\Kartigex\Exception;
+
 /**
  * Class Factory
  * @package Kartavik\Kartigex\Random
- *
- * Generator Factory
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
  * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
@@ -18,11 +18,11 @@ class Factory
      *
      * @var string[] List of Generators
      */
-    protected static $types = array(
-        'srand' => '\\ReverseRegex\\Random\\SrandRandom',
-        'mersenne' => '\\ReverseRegex\\Random\\MersenneRandom',
-        'simple' => '\\ReverseRegex\\Random\\Simple',
-    );
+    protected static $types = [
+        'srand' => Srand::class,
+        'mersenne' => MersenneRandom::class,
+        'simple' => Simple::class,
+    ];
 
     public static function registerExtension(string $name, string $generator): string
     {
@@ -37,12 +37,15 @@ class Factory
     }
 
     /**
-     * Resolve a Dcotrine DataType Class
+     * Resolve a Doctrine DataType Class
      *
-     * @param string the random generator type name
+     * @param string $type
+     * @param int|null $seed
      *
+     * @return mixed
+     * @throws Exception
      */
-    public function create($type, $seed = null)
+    public function create(string $type, int $seed = null)
     {
         $type = strtolower($type);
 
@@ -51,12 +54,12 @@ class Factory
         if (isset(self::$types[$type]) === true) {
             # assign platform the full namespace
             if (class_exists(self::$types[$type]) === false) {
-                throw new ReverseRegexException('Unknown Generator at::' . $type);
+                throw new Exception('Unknown Generator at::' . $type);
             }
 
             $type = self::$types[$type];
         } else {
-            throw new ReverseRegexException('Unknown Generator at::' . $type);
+            throw new Exception('Unknown Generator at::' . $type);
         }
 
         return new $type($seed);

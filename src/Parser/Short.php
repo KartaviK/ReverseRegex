@@ -13,8 +13,8 @@ use Kartavik\Kartigex\Lexer;
  * Parse a following Shorts (\d, \w, \D, \W, \s, \S, dot)
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
- * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  */
 class Short implements StrategyInterface
 {

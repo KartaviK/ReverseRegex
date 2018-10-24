@@ -1,54 +1,40 @@
 <?php
 
-namespace ReverseRegex;
+namespace Kartavik\Kartigex;
 
-use ReverseRegex\Exception as ParserException;
-use ReverseRegex\Lexer;
-use ReverseRegex\Generator\Scope;
-use ReverseRegex\Generator\LiteralScope;
+use Kartavik\Kartigex;
 
 /**
- *  Parser to convert regex into Group
+ * Class Parser
+ * @package Kartavik\Kartigex
+ *
+ * Parser to convert regex into Group
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
  */
 class Parser
 {
-    /**
-     * @var Lexer
-     */
+    /** @var Lexer */
     protected $lexer;
 
-    /**
-     * @var  ReverseRegex\Generator\Scope
-     */
+    /** @var Generator\Scope */
     protected $result;
 
-    /**
-     * @var ReverseRegex\Generator\Scope the current head
-     */
+    /** @var Generator\Scope */
     protected $head;
 
-    /**
-     * @var  ReverseRegex\Generator\Scope Last attached scope
-     */
+    /** @var Generator\Scope */
     protected $left;
 
-    /**
-     *  Class Constructor
-     *
-     * @access public
-     *
-     * @param Lexer $lexer
-     */
-    public function __construct(Lexer $lexer, Scope $result, Scope $head = null)
+    public function __construct(Lexer $lexer, Generator\Scope $result, Generator\Scope $head = null)
     {
         $this->lexer = $lexer;
         $this->result = $result;
 
         if ($head === null) {
-            $this->head = new Scope();
+            $this->head = new Generator\Scope();
         } else {
             $this->head = $head;
         }
@@ -58,64 +44,52 @@ class Parser
         $this->left = $head;
     }
 
-
     /**
-     *  Fetch the regex lexer
+     * Fetch the regex lexer
      *
-     * @access public
      * @return Lexer
      */
-    public function getLexer()
+    public function getLexer(): Lexer
     {
         return $this->lexer;
     }
 
-
-    /**
-     *  Will parse the regex into generator
-     *
-     * @access public
-     * @return
-     */
-    public function parse($sub = false)
+    public function parse()
     {
-
         try {
             while ($this->lexer->moveNext()) {
                 $result = null;
                 $scope = null;
                 $parser = null;
 
+                if ($this->lexer->isNextToken(Lexer::T_GROUP_OPEN)) {
+                    # is the group character the first token? is the regex wrapped in brackets.
+                    //if($this->lexer->token === null) {
+                    //  continue;
+                    //}
+
+                    # note this is a new group create new parser instance.
+                    $parser = new Parser($this->lexer, new Generator\Scope(), new Generator\Scope());
+
+                    $this->left = $parser->parse()->getResult();
+                    $this->head->attach($this->left);
+                } elseif ($this->lexer->isNextToken(Lexer::T_GROUP_CLOSE)) {
+                    break;
+                } elseif ($this->lexer->isNextTokenAny(array(Lexer::T_LITERAL_CHAR, Lexer::T_LITERAL_NUMERIC))) {
+                    # test for literal characters (abcd)
+                    $this->left = new Kartigex\Generator\LiteralScope();
+                    $this->left->addLiteral($this->lexer->lookahead['value']);
+                    $this->head->attach($this->left);
+                } elseif ($this->lexer->isNextToken(Lexer::T_SET_OPEN)) {
+                    # character classes [a-z]
+                    $this->left = new Kartigex\Generator\LiteralScope();
+                    self::createSubParser('character')->parse($this->left, $this->head, $this->lexer);
+                    $this->head->attach($this->left);
+                }
+
                 switch (true) {
-                    case ($this->lexer->isNextToken(Lexer::T_GROUP_OPEN)):
-                        # is the group character the first token? is the regex wrapped in brackets.
-                        //if($this->lexer->token === null) {
-                        //  continue;
-                        //}
+                    case ():
 
-                        # note this is a new group create new parser instance.
-                        $parser = new Parser($this->lexer, new Scope(), new Scope());
-
-                        $this->left = $parser->parse(true)->getResult();
-                        $this->head->attach($this->left);
-
-                        break;
-                    case ($this->lexer->isNextToken(Lexer::T_GROUP_CLOSE)):
-                        # group is finished don't want to contine this loop break = 2
-                        break 2;
-                        break;
-                    case ($this->lexer->isNextTokenAny(array(Lexer::T_LITERAL_CHAR, Lexer::T_LITERAL_NUMERIC))):
-                        # test for literal characters (abcd)
-                        $this->left = new LiteralScope();
-                        $this->left->addLiteral($this->lexer->lookahead['value']);
-                        $this->head->attach($this->left);
-
-                        break;
-                    case ($this->lexer->isNextToken(Lexer::T_SET_OPEN)):
-                        # character classes [a-z]
-                        $this->left = new LiteralScope();
-                        self::createSubParser('character')->parse($this->left, $this->head, $this->lexer);
-                        $this->head->attach($this->left);
 
 
                         break;
@@ -201,17 +175,12 @@ class Parser
         return $string;
     }
 
-
-    /**
-     *  Return the result of the parse
-     */
     public function getResult()
     {
         return $this->result;
     }
 
-
-    public static $sub_parsers = array(
+    public static $subParsers = array(
         'character' => '\\ReverseRegex\\Parser\\CharacterClass',
         'unicode' => '\\ReverseRegex\\Parser\\Unicode',
         'quantifer' => '\\ReverseRegex\\Parser\\Quantifier',
@@ -227,18 +196,16 @@ class Parser
      *
      * @param string $name the short name
      */
-    static function createSubParser($name)
+    static function createSubParser(string $name): StrategyInterface
     {
-
-        if (isset(self::$sub_parsers[$name]) === false) {
-            throw new ParserException('Unknown subparser at ' . $name);
+        if (isset(self::$subParsers[$name]) === false) {
+            throw new Exception('Unknown subparser at ' . $name);
         }
 
-        if (is_object(self::$sub_parsers[$name]) === false) {
-            self::$sub_parsers[$name] = new self::$sub_parsers[$name]();
+        if (is_object(self::$subParsers[$name]) === false) {
+            self::$subParsers[$name] = new self::$subParsers[$name]();
         }
 
-        return self::$sub_parsers[$name];
+        return self::$subParsers[$name];
     }
 }
-/* End of File */

@@ -22,12 +22,13 @@ abstract class BaseRandom implements Contract\GeneratorInterface
         $this->seed($seed ?? mt_rand(1, PHP_INT_MAX));
     }
 
-    public function max(int $value = null): int
+    public function getMax(): int
     {
-        if (is_null($value)) {
-            return $this->
-        }
+        return $this->max;
+    }
 
-        $this->max = $value;
+    public function setMax(int $max = null): void
+    {
+        $this->max = $max ?? PHP_INT_MAX;
     }
 }

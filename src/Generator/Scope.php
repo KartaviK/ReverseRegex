@@ -11,8 +11,8 @@ use Kartavik\Kartigex;
  * Base class for Scopes
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
- * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  */
 class Scope extends Node implements ContextInterface, RepeatInterface, AlternateInterface
 {
@@ -33,9 +33,9 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
     /**
      * {@inheritdoc}
      *
-     * @throws ReverseRegex\Exception
+     * @throws Kartigex\Exception
      */
-    public function generate(string &$result, GeneratorInterface $generator): void
+    public function generate(string &$result, Kartigex\Contract\GeneratorInterface $generator): void
     {
         if ($this->count() === 0) {
             throw new ReverseRegex\Exception('No child scopes to call must be at least 1');

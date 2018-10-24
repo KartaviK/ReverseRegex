@@ -13,8 +13,8 @@ use Kartavik\Kartigex\Exception as ParserException;
  * Parse a group quantifer e.g (abghb){1,5} , (abghb){5} , (abghb)* , (abghb)? , (abghb)+
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
- * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  */
 class Quantifier implements StrategyInterface
 {

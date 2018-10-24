@@ -9,8 +9,8 @@ namespace Kartavik\Kartigex\Generator;
  * Allows a scope to select children using alternating strategy
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
- * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  */
 interface AlternateInterface
 {

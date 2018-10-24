@@ -2,7 +2,7 @@
 
 namespace Kartavik\Kartigex\Generator;
 
-use Kartavik\Kartigex\Random;
+use Kartavik\Kartigex\Contract\GeneratorInterface;
 
 /**
  * Interface ContextInterface
@@ -11,8 +11,8 @@ use Kartavik\Kartigex\Random;
  * Context interface for Generator
  *
  * @author Lewis Dyer <getintouch@icomefromthenet.com>
- * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @since 0.0.1
+ * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  */
 interface ContextInterface
 {
@@ -20,7 +20,7 @@ interface ContextInterface
      * Generate a text string appending to result arguments
      *
      * @param string &$result
-     * @param Random\GeneratorInterface $generator
+     * @param GeneratorInterface $generator
      */
-    public function generate(string &$result, Random\GeneratorInterface $generator): void;
+    public function generate(string &$result, GeneratorInterface $generator): void;
 }
