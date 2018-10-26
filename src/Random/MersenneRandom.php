@@ -31,33 +31,23 @@ class MersenneRandom extends BaseRandom
     /** @var integer the min */
     protected $min;
 
-    public function __construct($seed = null)
+    public function __construct($seed)
     {
         $this->seed($seed);
         $this->index = -1;
+
+        parent::__construct();
     }
 
-    public function generate(int $min = 0, int $max = null): int
+    public function generate(int $min = 0, int $max = PHP_INT_MAX): int
     {
-        if ($max === null) {
-            $max = $this->max;
-        }
-
-        if ($min === null) {
-            $min = $this->min;
-        }
-
         ++$this->index;
 
         return abs($this->mt($min, $max));
     }
 
-    public function seed(int $seed = 0): void
+    public function seed(int $seed): void
     {
-        if ($seed === null) {
-            $seed = mt_rand(0, PHP_INT_MAX);
-        }
-
         $this->seed = $seed;
     }
 
@@ -77,7 +67,6 @@ class MersenneRandom extends BaseRandom
      * @return float the random number
      * @link http://boxrefuge.com/?tag=random-number
      * @author Justin unknown
-     *
      **/
     public function mt(int $min = 0, int $max = 1000)
     {

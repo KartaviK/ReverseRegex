@@ -8,7 +8,7 @@ namespace Kartavik\Kartigex\Contract;
  *
  * Interface that all generators should implement
  *
- * @access Lewis Dyer <getintouch@icomefromthenet.com>
+ * @author Lewis Dyer <getintouch@icomefromthenet.com>
  * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  */
 interface GeneratorInterface
@@ -30,11 +30,11 @@ interface GeneratorInterface
      */
     public function seed(int $seed): void;
 
-    public function setMax(int $value = 0);
+    public function setMax(int $value);
 
     public function getMax(): int;
 
-    public function setMin(int $value = 0): void;
+    public function setMin(int $value): void;
 
     public function getMin(): int;
 }
