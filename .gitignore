@@ -1,5 +1,2 @@
-vendor
-.vagrant
-composer.lock
-*.komodoproject
-manifest
+/vendor/
+/.idea/
