@@ -31,19 +31,19 @@ class Short implements StrategyInterface
     public function parse(Scope $head, Scope $set, Lexer $lexer)
     {
         switch (true) {
-            case ($lexer->isNextToken(Lexer::T_DOT)):
+            case ($lexer->isNextToken(Lexer::DOT)):
                 $this->convertDotToRange($head, $set, $lexer);
                 break;
-            case ($lexer->isNextToken(Lexer::T_SHORT_D)):
-            case ($lexer->isNextToken(Lexer::T_SHORT_NOT_D)):
+            case ($lexer->isNextToken(Lexer::SHORT_D)):
+            case ($lexer->isNextToken(Lexer::SHORT_NOT_D)):
                 $this->convertDigitToRange($head, $set, $lexer);
                 break;
-            case ($lexer->isNextToken(Lexer::T_SHORT_W)):
-            case ($lexer->isNextToken(Lexer::T_SHORT_NOT_W)):
+            case ($lexer->isNextToken(Lexer::SHORT_W)):
+            case ($lexer->isNextToken(Lexer::SHORT_NOT_W)):
                 $this->convertWordToRange($head, $set, $lexer);
                 break;
-            case ($lexer->isNextToken(Lexer::T_SHORT_S)):
-            case ($lexer->isNextToken(Lexer::T_SHORT_NOT_S)):
+            case ($lexer->isNextToken(Lexer::SHORT_S)):
+            case ($lexer->isNextToken(Lexer::SHORT_NOT_S)):
                 $this->convertWhiteSpaceToRange($head, $set, $lexer);
                 break;
             default:
@@ -60,7 +60,7 @@ class Short implements StrategyInterface
 
     public function convertDigitToRange(Scope $head, Scope $result, Lexer $lexer)
     {
-        if ($lexer->isNextToken(Lexer::T_SHORT_D)) {
+        if ($lexer->isNextToken(Lexer::SHORT_D)) {
             # digits only (0048 - 0057) digits
             $min = 48;
             $max = 57;
@@ -88,7 +88,7 @@ class Short implements StrategyInterface
 
     public function convertWordToRange(Scope $head, Scope $result, Lexer $lexer)
     {
-        if ($lexer->isNextToken(Lexer::T_SHORT_W)) {
+        if ($lexer->isNextToken(Lexer::SHORT_W)) {
             # `[a-zA-Z0-9_]`
 
             # 48 - 57
@@ -138,7 +138,7 @@ class Short implements StrategyInterface
 
     public function convertWhiteSpaceToRange(Scope $head, Scope $result, Lexer $lexer)
     {
-        if ($lexer->isNextToken(Lexer::T_SHORT_S)) {
+        if ($lexer->isNextToken(Lexer::SHORT_S)) {
             # spaces, tabs, and line breaks
             #0009 #0010 #0012 #0013 #0032
 

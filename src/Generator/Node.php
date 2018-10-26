@@ -23,36 +23,10 @@ class Node implements \ArrayAccess, \Countable, \Iterator
     /** @var \SplObjectStorage container for node relationships */
     protected $links;
 
-    public function __construct($label = 'node')
+    public function __construct(\ArrayObject $attributes = null)
     {
-        $this->attributes = new \ArrayObject();
+        $this->attributes = $attributes ?? new \ArrayObject();
         $this->links = new \SplObjectStorage();
-
-        $this->setLabel($label);
-    }
-
-    /**
-     * Fetch the nodes label
-     *
-     * @return string The nodes label
-     */
-    public function getLabel(): string
-    {
-        return $this->label;
-    }
-
-    /**
-     * Sets the node label
-     *
-     * @param string $label the nodes label
-     */
-    public function setLabel($label): void
-    {
-        if (!(is_scalar($label) || is_null($label))) {
-            return;
-        }
-
-        $this->label = $label;
     }
 
     /**

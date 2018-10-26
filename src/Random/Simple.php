@@ -9,33 +9,11 @@ namespace Kartavik\Kartigex\Random;
  * @link http://www.sitepoint.com/php-random-number-generator/
  * @author Craig Buckler
  */
-class Simple implements GeneratorInterface
+class Simple implem
 {
     public function __construct(int $seed = null)
     {
         $this->seed($seed ?? mt_rand(1, PHP_INT_MAX));
-    }
-
-    public function max(int $value = null): int
-    {
-        if ($value === null && $this->max === null) {
-            return PHP_INT_MAX;
-        } elseif ($value === null) {
-            return $this->max;
-        }
-
-        return $this->max = $value;
-    }
-
-    public function min(int $value = null): int
-    {
-        if ($value === null && $this->max === null) {
-            return 0;
-        } elseif ($value === null) {
-            return $this->min;
-        }
-
-        return $this->min = $value;
     }
 
     /**

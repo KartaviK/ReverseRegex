@@ -19,119 +19,119 @@ class Lexer extends Common\Lexer\AbstractLexer
     /**
      * An escape character
      */
-    const T_ESCAPE_CHAR = -1;
+    const ESCAPE_CHAR = -1;
 
     /**
      * The literal type ie a=a ^=^
      */
-    const T_LITERAL_CHAR = 0;
+    const LITERAL_CHAR = 0;
 
     /**
      * Numeric literal  1=1 100=100
      */
-    const T_LITERAL_NUMERIC = 1;
+    const LITERAL_NUMERIC = 1;
 
     /**
      * The opening character for group. [(]
      */
-    const T_GROUP_OPEN = 2;
+    const GROUP_OPEN = 2;
 
     /**
      * The closing character for group  [)]
      */
-    const T_GROUP_CLOSE = 3;
+    const GROUP_CLOSE = 3;
 
     /**
      * Opening character for Quantifier  ({)
      */
-    const T_QUANTIFIER_OPEN = 4;
+    const QUANTIFIER_OPEN = 4;
 
     /**
      * Closing character for Quantifier (})
      */
-    const T_QUANTIFIER_CLOSE = 5;
+    const QUANTIFIER_CLOSE = 5;
 
     /**
      * Star quantifier character (*)
      */
-    const T_QUANTIFIER_STAR = 6;
+    const QUANTIFIER_STAR = 6;
 
     /**
      * Plus quantifier character (+)
      */
-    const T_QUANTIFIER_PLUS = 7;
+    const QUANTIFIER_PLUS = 7;
 
     /**
      * The one but optional character (?)
      */
-    const T_QUANTIFIER_QUESTION = 8;
+    const QUANTIFIER_QUESTION = 8;
 
     /**
      * Start of string character (^)
      */
-    const T_START_CARET = 9;
+    const START_CARET = 9;
 
     /**
      * End of string character ($)
      */
-    const T_END_DOLLAR = 10;
+    const END_DOLLAR = 10;
 
     /**
      * Range character inside set ([)
      */
-    const T_SET_OPEN = 11;
+    const SET_OPEN = 11;
 
     /**
      * Range character inside set (])
      */
-    const T_SET_CLOSE = 12;
+    const SET_CLOSE = 12;
 
     /**
      * Range character inside set (-)
      */
-    const T_SET_RANGE = 13;
+    const SET_RANGE = 13;
 
     /**
      * Negated Character in set ([^)
      */
-    const T_SET_NEGATED = 14;
+    const SET_NEGATED = 14;
 
     /**
      * The either character (|)
      */
-    const T_CHOICE_BAR = 15;
+    const CHOICE_BAR = 15;
 
     /**
      * The dot character (.)
      */
-    const T_DOT = 16;
+    const DOT = 16;
 
     /**
      * One Word boundary
      */
-    const T_SHORT_W = 100;
-    const T_SHORT_NOT_W = 101;
+    const SHORT_W = 100;
+    const SHORT_NOT_W = 101;
 
-    const T_SHORT_D = 102;
-    const T_SHORT_NOT_D = 103;
+    const SHORT_D = 102;
+    const SHORT_NOT_D = 103;
 
-    const T_SHORT_S = 104;
-    const T_SHORT_NOT_S = 105;
+    const SHORT_S = 104;
+    const SHORT_NOT_S = 105;
 
     /**
      * Unicode sequences /p{} /pNum
      */
-    const T_SHORT_P = 106;
+    const SHORT_P = 106;
 
     /**
      * Hex Sequences /x{} /xNum
      */
-    const T_SHORT_X = 108;
+    const SHORT_X = 108;
 
     /**
      * Unicode hex sequence /X{} /XNum
      */
-    const T_SHORT_UNICODE_X = 109;
+    const SHORT_UNICODE_X = 109;
 
     /** @var bool The lexer has detected escape character */
     protected $escapeMode = false;
@@ -183,7 +183,7 @@ class Lexer extends Common\Lexer\AbstractLexer
         switch (true) {
             case ($value === '\\' && $this->escapeMode === false):
                 $this->escapeMode = true;
-                $type = self::T_ESCAPE_CHAR;
+                $type = static::ESCAPE_CHAR;
 
                 if ($this->setMode === true) {
                     $this->setInternalCounter++;
@@ -192,12 +192,12 @@ class Lexer extends Common\Lexer\AbstractLexer
                 break;
             // Groups
             case ($value === '(' && $this->escapeMode === false && $this->setMode === false):
-                $type = self::T_GROUP_OPEN;
+                $type = static::GROUP_OPEN;
                 $this->groupSet++;
 
                 break;
             case ($value === ')' && $this->escapeMode === false && $this->setMode === false):
-                $type = self::T_GROUP_CLOSE;
+                $type = static::GROUP_CLOSE;
                 $this->groupSet--;
 
                 break;
@@ -208,78 +208,78 @@ class Lexer extends Common\Lexer\AbstractLexer
                 throw new Exception("Can't close a character class while none is open");
             case ($value === '[' && $this->escapeMode === false && $this->setMode === false):
                 $this->setMode = true;
-                $type = self::T_SET_OPEN;
+                $type = static::SET_OPEN;
                 $this->setInternalCounter = 1;
 
                 break;
             case ($value === ']' && $this->escapeMode === false && $this->setMode === true):
                 $this->setMode = false;
-                $type = self::T_SET_CLOSE;
+                $type = static::SET_CLOSE;
                 $this->setInternalCounter = 0;
 
                 break;
             case ($value === '-' && $this->escapeMode === false && $this->setMode === true):
                 $this->setInternalCounter++;
 
-                return self::T_SET_RANGE;
+                return static::SET_RANGE;
             case ($value === '^' && $this->escapeMode === false
                 && $this->setMode === true && $this->setInternalCounter === 1):
                 $this->setInternalCounter++;
 
-                return self::T_SET_NEGATED;
+                return static::SET_NEGATED;
             // Quantifers
             case ($value === '{' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_QUANTIFIER_OPEN;
+                return static::QUANTIFIER_OPEN;
             case ($value === '}' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_QUANTIFIER_CLOSE;
+                return static::QUANTIFIER_CLOSE;
             case ($value === '*' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_QUANTIFIER_STAR;
+                return static::QUANTIFIER_STAR;
             case ($value === '+' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_QUANTIFIER_PLUS;
+                return static::QUANTIFIER_PLUS;
             case ($value === '?' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_QUANTIFIER_QUESTION;
+                return static::QUANTIFIER_QUESTION;
             // Recognize symbols
             case ($value === '.' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_DOT;
+                return static::DOT;
             case ($value === '|' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_CHOICE_BAR;
+                return static::CHOICE_BAR;
             case ($value === '^' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_START_CARET;
+                return static::START_CARET;
             case ($value === '$' && $this->escapeMode === false && $this->setMode === false):
-                return self::T_END_DOLLAR;
+                return static::END_DOLLAR;
             // ShortCodes
             case ($value === 'd' && $this->escapeMode === true):
-                $type = self::T_SHORT_D;
+                $type = static::SHORT_D;
                 $this->escapeMode = false;
 
                 break;
             case ($value === 'D' && $this->escapeMode === true):
-                $type = self::T_SHORT_NOT_D;
+                $type = static::SHORT_NOT_D;
                 $this->escapeMode = false;
 
                 break;
             case ($value === 'w' && $this->escapeMode === true):
-                $type = self::T_SHORT_W;
+                $type = static::SHORT_W;
                 $this->escapeMode = false;
 
                 break;
             case ($value === 'W' && $this->escapeMode === true):
-                $type = self::T_SHORT_NOT_W;
+                $type = static::SHORT_NOT_W;
                 $this->escapeMode = false;
 
                 break;
             case ($value === 's' && $this->escapeMode === true):
-                $type = self::T_SHORT_S;
+                $type = static::SHORT_S;
                 $this->escapeMode = false;
 
                 break;
             case ($value === 'S' && $this->escapeMode === true):
-                $type = self::T_SHORT_NOT_S;
+                $type = static::SHORT_NOT_S;
                 $this->escapeMode = false;
 
                 break;
             case ($value === 'x' && $this->escapeMode === true):
-                $type = self::T_SHORT_X;
+                $type = static::SHORT_X;
                 $this->escapeMode = false;
 
                 if ($this->setMode === true) {
@@ -288,7 +288,7 @@ class Lexer extends Common\Lexer\AbstractLexer
 
                 break;
             case ($value === 'X' && $this->escapeMode === true):
-                $type = self::T_SHORT_UNICODE_X;
+                $type = static::SHORT_UNICODE_X;
                 $this->escapeMode = false;
 
                 if ($this->setMode === true) {
@@ -297,7 +297,7 @@ class Lexer extends Common\Lexer\AbstractLexer
 
                 break;
             case (($value === 'p' || $value === 'P') && $this->escapeMode === true):
-                $type = self::T_SHORT_P;
+                $type = static::SHORT_P;
                 $this->escapeMode = false;
 
                 if ($this->setMode === true) {
@@ -308,9 +308,9 @@ class Lexer extends Common\Lexer\AbstractLexer
             // Default
             default:
                 if (is_numeric($value) === true) {
-                    $type = self::T_LITERAL_NUMERIC;
+                    $type = static::LITERAL_NUMERIC;
                 } else {
-                    $type = self::T_LITERAL_CHAR;
+                    $type = static::LITERAL_CHAR;
                 }
 
                 if ($this->setMode === true) {

@@ -1,187 +1,180 @@
 <?php
-namespace ReverseRegex\Test;
 
-use ReverseRegex\Lexer;
-use ReverseRegex\Parser\Quantifier;
-use ReverseRegex\Generator\Scope;
-use ReverseRegex\Random\MersenneRandom;
+namespace Kartavik\Kartigex\Test;
 
-class QuantifierParserTest extends Basic
+use Kartavik\Kartigex;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Class QuantifierParserTest
+ * @package ReverseRegex\Test
+ * @internal
+ */
+class QuantifierParserTest extends TestCase
 {
-    
-    public function testQuantifierParserPatternA()
+    public function testQuantifierParserPatternA(): void
     {
         $pattern = '{1,5}';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
-        
+
         $this->assertEquals(1, $scope->getMinOccurrences());
         $this->assertEquals(5, $scope->getMaxOccurrences());
     }
-    
-    
-    public function testQuantiferSingleValue()
+
+    public function testQuantifierSingleValue(): void
     {
-        
         $pattern = '{5}';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
-        
+
         $this->assertEquals(5, $scope->getMinOccurrences());
         $this->assertEquals(5, $scope->getMaxOccurrences());
     }
-    
-    public function testQuantiferSpacesIncluded()
+
+    public function testQuantifierSpacesIncluded(): void
     {
-        
         $pattern = '{ 1 , 5 }';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
-        
+
         $this->assertEquals(1, $scope->getMinOccurrences());
         $this->assertEquals(5, $scope->getMaxOccurrences());
     }
-    
+
     /**
-      *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Quantifier expects and integer compitable string
-      */
-    public function testFailerAlphaCaracters()
+     * @expectedException \Kartavik\Kartigex\Exception
+     * @expectedExceptionMessage Quantifier expects and integer compitable string
+     */
+    public function testFailedAlphaCharacters(): void
     {
         $pattern = '{ 1 , 5a }';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
     }
-    
+
     /**
-      *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Quantifier expects and integer compitable string
-      */
-    public function testFailerMissingMaximumCaracters()
+     * @expectedException \Kartavik\Kartigex\Exception
+     * @expectedExceptionMessage Quantifier expects and integer compitable string
+     */
+    public function testFailedMissingMaximumCharacters(): void
     {
         $pattern = '{ 1 ,}';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
     }
-    
-     /**
-      *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Quantifier expects and integer compitable string
-      */
-    public function testFailerMissingMinimumCaracters()
+
+    /**
+     * @expectedException \Kartavik\Kartigex\Exception
+     * @expectedExceptionMessage Quantifier expects and integer compitable string
+     */
+    public function testFailedMissingMinimumCharacters()
     {
         $pattern = '{,1}';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
     }
-    
+
     /**
-      *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Closing quantifier token `}` not found
-      */
-    public function testMissingClosureCharacter()
+     * @expectedException \Kartavik\Kartigex\Exception
+     * @expectedExceptionMessage Closing quantifier token `}` not found
+     */
+    public function testMissingClosureCharacter(): void
     {
         $pattern = '{1,1';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
     }
-    
-    
+
     /**
-      *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Nesting Quantifiers is not allowed
-      */
-    public function testNestingQuantifiers()
+     * @expectedException \Kartavik\Kartigex\Exception
+     * @expectedExceptionMessage Nesting Quantifiers is not allowed
+     */
+    public function testNestingQuantifiers(): void
     {
         $pattern = '{1,1{1,1}';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
     }
-    
-    
-    public function testStarQuantifier()
+
+    public function testStarQuantifier(): void
     {
         $pattern = 'az*';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $lexer->moveNext();
         $lexer->moveNext();
-        
+
         $qual->parse($scope, $scope, $lexer);
-        
+
         $this->assertEquals(0, $scope->getMinOccurrences());
         $this->assertEquals(PHP_INT_MAX, $scope->getMaxOccurrences());
     }
-    
-    
-    public function testCrossQuantifier()
+
+    public function testCrossQuantifier(): void
     {
         $pattern = 'az+';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $lexer->moveNext();
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
-        
+
         $this->assertEquals(1, $scope->getMinOccurrences());
         $this->assertEquals(PHP_INT_MAX, $scope->getMaxOccurrences());
     }
-    
-    public function testQuestionQuantifier()
+
+    public function testQuestionQuantifier(): void
     {
         $pattern = 'az?';
-        $lexer   = new Lexer($pattern);
-        $scope   = new Scope();
-        $qual    = new Quantifier();
-        
+        $lexer = new Kartigex\Lexer($pattern);
+        $scope = new Kartigex\Generator\Scope();
+        $qual = new Kartigex\Parser\Quantifier();
+
         $lexer->moveNext();
         $lexer->moveNext();
         $lexer->moveNext();
         $qual->parse($scope, $scope, $lexer);
-        
+
         $this->assertEquals(0, $scope->getMinOccurrences());
         $this->assertEquals(1, $scope->getMaxOccurrences());
     }
 }
-/* End of File */

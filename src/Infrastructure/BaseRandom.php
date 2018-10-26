@@ -1,10 +1,12 @@
 <?php
 
-namespace Kartavik\Kartigex;
+namespace Kartavik\Kartigex\Infrastructure;
+
+use Kartavik\Kartigex\Contract;
 
 /**
  * Class BaseRandom
- * @package Kartavik\Kartigex
+ * @package Kartavik\Kartigex\Infrastructure
  */
 abstract class BaseRandom implements Contract\GeneratorInterface
 {
@@ -22,13 +24,13 @@ abstract class BaseRandom implements Contract\GeneratorInterface
         $this->seed($seed ?? mt_rand(1, PHP_INT_MAX));
     }
 
-    public function getMax(): int
+    public function setMax(): int
     {
         return $this->max;
     }
 
-    public function setMax(int $max = null): void
+    public function setMax(int $max = PHP_INT_MAX): void
     {
-        $this->max = $max ?? PHP_INT_MAX;
+        $this->max = $max;
     }
 }

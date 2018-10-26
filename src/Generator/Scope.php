@@ -20,14 +20,14 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
     public const REPEAT_MAX_INDEX = 'repeat_max';
     public const USE_ALTERNATING_INDEX = 'use_alternating';
 
-    public function __construct(string $label = 'node')
+    public function __construct()
     {
-        parent::__construct($label);
-
-        $this[self::USE_ALTERNATING_INDEX] = false;
+        $this[static::USE_ALTERNATING_INDEX] = false;
 
         $this->setMinOccurrences(1);
         $this->setMaxOccurrences(1);
+        
+        parent::__construct();
     }
 
     /**
@@ -38,7 +38,7 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
     public function generate(string &$result, Kartigex\Contract\GeneratorInterface $generator): void
     {
         if ($this->count() === 0) {
-            throw new ReverseRegex\Exception('No child scopes to call must be at least 1');
+            throw new Kartigex\Exception('No child scopes to call must be at least 1');
         }
 
         $repeat_x = $this->calculateRepeatQuota($generator);
@@ -47,7 +47,7 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
         $this->rewind();
         while ($repeat_x > 0) {
             if ($this->usingAlternatingStrategy()) {
-                $randomIndex = \round($generator->generate(1, ($this->count())));
+                $randomIndex = \round($generator->generate(1, $this->count()));
                 $this->get($randomIndex)->generate($result, $generator);
             } else {
                 foreach ($this as $current) {
@@ -108,9 +108,9 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
     /**
      * {@inheritdoc}
      */
-    public function setMinOccurrences(int $num): void
+    public function setMinOccurrences(int $number): void
     {
-        $this[static::REPEAT_MIN_INDEX] = $num;
+        $this[static::REPEAT_MIN_INDEX] = $number;
     }
 
     /**
@@ -124,16 +124,16 @@ class Scope extends Node implements ContextInterface, RepeatInterface, Alternate
     /**
      * Calculate a random number of repeats given the current min-max range
      *
-     * @param GeneratorInterface $generator
+     * @param Kartigex\Contract\GeneratorInterface $generator
      *
      * @return int
      */
-    public function calculateRepeatQuota(GeneratorInterface $generator): int
+    public function calculateRepeatQuota(Kartigex\Contract\GeneratorInterface $generator): int
     {
         $repeatX = $this->getMinOccurrences();
 
         if ($this->getOccurrenceRange() > 0) {
-            $repeatX = (int)\round($generator->generate($this->getMinOccurrences(), $this->getMaxOccurrences()));
+            $repeatX = $generator->generate($this->getMinOccurrences(), $this->getMaxOccurrences());
         }
 
         return $repeatX;

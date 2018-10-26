@@ -15,10 +15,11 @@
   "keywords": [
     "regex",
     "testing",
-    "test data",
     "generator",
-    "reverse"
+    "reverse",
+    "kartigex"
   ],
+  "license": "MIT",
   "authors": [
     {
       "name": "Lewis Dyer",
@@ -30,7 +31,6 @@
       "email": "roman.varkuta@gmail.com"
     }
   ],
-  "license": "MIT",
   "autoload": {
     "psr-4": {
       "Kartavik\\Kartigex\\": "src/"
@@ -39,6 +39,13 @@
   "autoload-dev": {
     "psr-4": {
       "Kartavik\\Kartigex\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "process-timeout": 1800,
+    "sort-packages": true,
+    "platform": {
+      "php": "7.1"
     }
   },
   "scripts": {

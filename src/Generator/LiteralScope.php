@@ -16,14 +16,14 @@ use Kartavik\Kartigex;
  */
 class LiteralScope extends Scope
 {
-    /**@var Kartigex\ArrayCollection */
+    /**@var \ArrayObject */
     protected $literals;
 
-    public function __construct(string $label = 'label')
+    public function __construct(\ArrayObject $collection = null)
     {
-        parent::__construct($label);
+        $this->literals = $collection ?? new \ArrayObject();
 
-        $this->literals = new Kartigex\ArrayCollection();
+        parent::__construct();
     }
 
     /**
@@ -33,7 +33,7 @@ class LiteralScope extends Scope
      */
     public function addLiteral($literal): void
     {
-        $this->literals->add($literal);
+        $this->literals->append($literal);
     }
 
     /**
@@ -44,15 +44,15 @@ class LiteralScope extends Scope
      */
     public function setLiteral(string $hex, string $literal): void
     {
-        $this->literals->set($hex, $literal);
+        $this->literals->offsetSet($hex, $literal);
     }
 
     /**
      * Return the literal ArrayCollection
      *
-     * @return Kartigex\ArrayCollection
+     * @return \ArrayObject
      */
-    public function getLiterals(): Kartigex\ArrayCollection
+    public function getLiterals(): \ArrayObject
     {
         return $this->literals;
     }
@@ -62,24 +62,24 @@ class LiteralScope extends Scope
      *
      * @throws Kartigex\Exception
      */
-    public function generate(string &$result, Kartigex\Random\GeneratorInterface $generator): void
+    public function generate(string &$result, Kartigex\Contract\GeneratorInterface $generator): void
     {
-        if ($this->literals->count() === 0) {
+        if (!$this->literals->count()) {
             throw new Kartigex\Exception('There are no literals to choose from');
         }
 
-        $repeat_x = $this->calculateRepeatQuota($generator);
+        $repeatQuota = $this->calculateRepeatQuota($generator);
 
-        while ($repeat_x > 0) {
+        while ($repeatQuota > 0) {
             $randomIndex = 0;
 
             if ($this->literals->count() > 1) {
-                $randomIndex = \round($generator->generate(1, $this->literals->count()));
+                $randomIndex = $generator->generate(1, $this->literals->count());
             }
 
-            $result .= $this->literals->getAt($randomIndex);
+            $result .= $this->literals->offsetGet($randomIndex);
 
-            --$repeat_x;
+            --$repeatQuota;
         }
     }
 }

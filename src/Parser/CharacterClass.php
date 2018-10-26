@@ -20,41 +20,41 @@ class CharacterClass implements StrategyInterface
     /**
      * Will return a normalized ie unicode sequences been evaluated.
      *
-     * @param ReverseRegex\Generator\Scope $head
-     * @param ReverseRegex\Generator\Scope $set
-     * @param ReverseRegex\Lexer $lexer
+     * @param Kartigex\Generator\Scope $head
+     * @param Kartigex\Generator\Scope $set
+     * @param Kartigex\Lexer $lexer
      *
      * @return string
-     * @throws ReverseRegex\Exception
+     * @throws Kartigex\Exception
      */
     public function normalize(
-        ReverseRegex\Generator\Scope $head,
-        ReverseRegex\Generator\Scope $set,
-        ReverseRegex\Lexer $lexer
+        Kartigex\Generator\Scope $head,
+        Kartigex\Generator\Scope $set,
+        Kartigex\Lexer $lexer
     ): string {
         $collection = [];
         $unicode = new Unicode();
 
-        while ($lexer->moveNext() && !$lexer->isNextToken(ReverseRegex\Lexer::T_SET_CLOSE)) {
+        while ($lexer->moveNext() && !$lexer->isNextToken(Kartigex\Lexer::SET_CLOSE)) {
             $value = null;
 
             if ($lexer->isNextTokenAny([
-                ReverseRegex\Lexer::T_SHORT_UNICODE_X,
-                ReverseRegex\Lexer::T_SHORT_P,
-                ReverseRegex\Lexer::T_SHORT_X
+                Kartigex\Lexer::SHORT_UNICODE_X,
+                Kartigex\Lexer::SHORT_P,
+                Kartigex\Lexer::SHORT_X
             ])) {
                 $collection[] = $unicode->evaluate($lexer);
             } elseif ($lexer->isNextTokenAny([
-                ReverseRegex\Lexer::T_LITERAL_CHAR,
-                ReverseRegex\Lexer::T_LITERAL_NUMERIC
+                Kartigex\Lexer::LITERAL_CHAR,
+                Kartigex\Lexer::LITERAL_NUMERIC
             ])) {
                 $collection[] = $lexer->lookahead['value'];
-            } elseif ($lexer->isNextToken(ReverseRegex\Lexer::T_SET_RANGE)) {
+            } elseif ($lexer->isNextToken(Kartigex\Lexer::SET_RANGE)) {
                 $collection[] = '-';
-            } elseif ($lexer->isNextToken(ReverseRegex\Lexer::T_ESCAPE_CHAR)) {
+            } elseif ($lexer->isNextToken(Kartigex\Lexer::ESCAPE_CHAR)) {
                 $collection[] = '\\';
             } else {
-                throw new ReverseRegex\Exception('Illegal meta character detected in character class');
+                throw new Kartigex\Exception('Illegal meta character detected in character class');
             }
         }
 
@@ -69,49 +69,49 @@ class CharacterClass implements StrategyInterface
     /**
      * Parse the current token for new Quantifiers
      *
-     * @param ReverseRegex\Generator\Scope $head
-     * @param ReverseRegex\Generator\Scope $set
-     * @param ReverseRegex\Lexer $lexer
+     * @param Kartigex\Generator\Scope $head
+     * @param Kartigex\Generator\Scope $set
+     * @param Kartigex\Lexer $lexer
      *
-     * @return ReverseRegex\Generator\Scope
-     * @throws ReverseRegex\Exception
+     * @return Kartigex\Generator\Scope
+     * @throws Kartigex\Exception
      */
     public function parse(
-        ReverseRegex\Generator\Scope $head,
-        ReverseRegex\Generator\Scope $set,
-        ReverseRegex\Lexer $lexer
-    ): ReverseRegex\Generator\Scope {
-        if ($lexer->lookahead['type'] !== ReverseRegex\Lexer::T_SET_OPEN) {
-            throw new ReverseRegex\Exception('Opening character set token not found');
+        Kartigex\Generator\Scope $head,
+        Kartigex\Generator\Scope $set,
+        Kartigex\Lexer $lexer
+    ): Kartigex\Generator\Scope {
+        if ($lexer->lookahead['type'] !== Kartigex\Lexer::SET_OPEN) {
+            throw new Kartigex\Exception('Opening character set token not found');
         }
 
         $peek = $lexer->glimpse();
-        if ($peek['type'] === ReverseRegex\Lexer::T_SET_NEGATED) {
-            throw new ReverseRegex\Exception('Negated Character Set ranges not supported at this time');
+        if ($peek['type'] === Kartigex\Lexer::SET_NEGATED) {
+            throw new Kartigex\Exception('Negated Character Set ranges not supported at this time');
         }
 
-        $normalLexer = new ReverseRegex\Lexer($this->normalize($head, $set, $lexer));
+        $normalLexer = new Kartigex\Lexer($this->normalize($head, $set, $lexer));
 
-        while ($normalLexer->moveNext() && !$normalLexer->isNextToken(ReverseRegex\Lexer::T_SET_CLOSE)) {
+        while ($normalLexer->moveNext() && !$normalLexer->isNextToken(Kartigex\Lexer::SET_CLOSE)) {
             $glimpse = $normalLexer->glimpse();
 
-            if ($glimpse['type'] === ReverseRegex\Lexer::T_SET_RANGE) {
+            if ($glimpse['type'] === Kartigex\Lexer::SET_RANGE) {
                 continue; //value be included in range when `-` character is passed
             }
 
-            if ($normalLexer->isNextToken(ReverseRegex\Lexer::T_SET_RANGE)) {
+            if ($normalLexer->isNextToken(Kartigex\Lexer::SET_RANGE)) {
                 $range_start = $normalLexer->token['value'];
 
                 $normalLexer->moveNext();
 
-                if ($normalLexer->isNextToken(ReverseRegex\Lexer::T_ESCAPE_CHAR)) {
+                if ($normalLexer->isNextToken(Kartigex\Lexer::ESCAPE_CHAR)) {
                     $normalLexer->moveNext();
                 }
 
                 $range_end = $normalLexer->lookahead['value'];
                 $this->fillRange($head, $range_start, $range_end);
-            } elseif ($normalLexer->isNextToken(ReverseRegex\Lexer::T_LITERAL_NUMERIC)
-                || $normalLexer->isNextToken(Lexer::T_LITERAL_CHAR)) {
+            } elseif ($normalLexer->isNextToken(Kartigex\Lexer::LITERAL_NUMERIC)
+                || $normalLexer->isNextToken(Kartigex\Lexer::LITERAL_CHAR)) {
                 $index = (integer)Utf8::ord($normalLexer->lookahead['value']);
                 $head->setLiteral($index, $normalLexer->lookahead['value']);
             }
@@ -125,19 +125,19 @@ class CharacterClass implements StrategyInterface
     /**
      * Fill a range given starting and ending character
      *
-     * @param ReverseRegex\Generator\Scope $head
+     * @param Kartigex\Generator\Scope $head
      * @param int $start
      * @param int $end
      *
-     * @throws ReverseRegex\Exception
+     * @throws Kartigex\Exception
      */
-    public function fillRange(ReverseRegex\Generator\Scope $head, int $start, int $end): void
+    public function fillRange(Kartigex\Generator\Scope $head, int $start, int $end): void
     {
         $start = Utf8::ord($start);
         $end = Utf8::ord($end);
 
         if ($end < $start) {
-            throw new ReverseRegex\Exception(sprintf('Character class range %s - %s is out of order', $start, $end));
+            throw new Kartigex\Exception(sprintf('Character class range %s - %s is out of order', $start, $end));
         }
 
         for ($i = $start; $i <= $end; $i++) {

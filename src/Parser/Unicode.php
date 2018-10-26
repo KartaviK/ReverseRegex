@@ -42,10 +42,10 @@ class Unicode implements StrategyInterface
     public function evaluate(Lexer $lexer)
     {
         switch (true) {
-            case ($lexer->isNextToken(Lexer::T_SHORT_P)):
+            case ($lexer->isNextToken(Lexer::SHORT_P)):
                 throw new ParserException('Property \p (Unicode Property) not supported use \x to specify unicode character or range');
                 break;
-            case ($lexer->isNextToken(Lexer::T_SHORT_UNICODE_X)):
+            case ($lexer->isNextToken(Lexer::SHORT_UNICODE_X)):
                 $lexer->moveNext();
                 if ($lexer->lookahead['value'] !== '{') {
                     throw new ParserException('Expecting character { after \X none found');
@@ -79,7 +79,7 @@ class Unicode implements StrategyInterface
                 return Utf8::chr(hexdec($number));
 
                 break;
-            case ($lexer->isNextToken(Lexer::T_SHORT_X)):
+            case ($lexer->isNextToken(Lexer::SHORT_X)):
                 // only allow another 2 hex characters
                 $glimpse = $lexer->glimpse();
                 if ($glimpse['value'] === '{') {

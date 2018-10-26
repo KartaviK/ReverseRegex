@@ -1,24 +1,22 @@
 <?php
-namespace ReverseRegex\Test;
+namespace Kartavik\Kartigex\Test;
 
 use PHPUnit\Framework\TestCase;
-use ReverseRegex\Lexer;
-use ReverseRegex\Parser;
-use ReverseRegex\Generator\Scope;
-use ReverseRegex\Generator\LiteralScope;
-use ReverseRegex\Parser\CharacterClass;
+use Kartavik\Kartigex;
 
+/**
+ * Class CharacterClassTest
+ * @package Kartavik\Kartigex\Test
+ * @internal
+ */
 class CharacterClassTest extends TestCase
 {
-    
-    public function testNormalizeNoUnicode()
+    public function testNormalizeNoUnicode(): void
     {
-        
-        $lexer = new Lexer('[a-mnop]');
-        $scope = new Scope();
-        $parser = new CharacterClass();
-        
-        
+        $lexer = new Kartigex\Lexer('[a-mnop]');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\CharacterClass();
+
         $lexer->moveNext();
         $result = $parser->normalize($scope, $scope, $lexer);
         

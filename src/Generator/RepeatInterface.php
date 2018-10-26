@@ -38,9 +38,9 @@ interface RepeatInterface
     /**
      * Sets the Minimum number of re-occurrences
      *
-     * @param int $num
+     * @param int $number
      */
-    public function setMinOccurrences(int $num): void;
+    public function setMinOccurrences(int $number): void;
 
     /**
      * Return the occurrence range

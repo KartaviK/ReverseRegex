@@ -1,8 +1,8 @@
 <?php
 
-namespace ReverseRegex\Test;
+namespace Kartavik\Kartigex\Test;
 
-use ReverseRegex\Generator\LiteralScope;
+use Kartavik\Kartigex\Generator\LiteralScope;
 
 class LiteralScopeTest extends Basic
 {

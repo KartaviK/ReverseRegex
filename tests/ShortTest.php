@@ -1,148 +1,145 @@
 <?php
-namespace ReverseRegex\Test;
 
-use ReverseRegex\Lexer;
-use ReverseRegex\Parser;
-use ReverseRegex\Generator\Scope;
-use ReverseRegex\Generator\LiteralScope;
-use ReverseRegex\Parser\Short;
+namespace Kartavik\Kartigex\Test;
 
-class ShortTest extends Basic
+use Kartavik\Kartigex;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Class ShortTest
+ * @package ReverseRegex\Test
+ * @internal
+ */
+class ShortTest extends TestCase
 {
-    
-    public function testDigit()
+    public function testDigit(): void
     {
-        $lexer = new Lexer('\d');
-        $scope = new Scope();
-        $parser = new Short();
-        $head   = new LiteralScope('lit1', $scope);
-        
+        $lexer = new Kartigex\Lexer('\d');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\Short();
+        $head = new Kartigex\Generator\LiteralScope('lit1', $scope);
+
         $lexer->moveNext();
         $lexer->moveNext();
-        
+
         $parser->parse($head, $scope, $lexer);
-        
+
         $result = $head->getLiterals();
-        
+
         foreach ($result as $value) {
             $this->assertRegExp('/\d/', $value);
         }
     }
-    
-    public function testNotDigit()
+
+    public function testNotDigit(): void
     {
-        $lexer = new Lexer('\D');
-        $scope = new Scope();
-        $parser = new Short();
-        $head   = new LiteralScope('lit1', $scope);
-        
+        $lexer = new Kartigex\Lexer('\D');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\Short();
+        $head = new Kartigex\Generator\LiteralScope('lit1', $scope);
+
         $lexer->moveNext();
         $lexer->moveNext();
-        
+
         $parser->parse($head, $scope, $lexer);
-        
+
         $result = $head->getLiterals();
-        
+
         foreach ($result as $value) {
             $this->assertRegExp('/\D/', $value);
         }
     }
-    
-    public function testWhitespace()
+
+    public function testWhitespace(): void
     {
-        $lexer = new Lexer('\s');
-        $scope = new Scope();
-        $parser = new Short();
-        $head   = new LiteralScope('lit1', $scope);
-        
+        $lexer = new Kartigex\Lexer('\s');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\Short();
+        $head = new Kartigex\Generator\LiteralScope('lit1', $scope);
+
         $lexer->moveNext();
         $lexer->moveNext();
-        
+
         $parser->parse($head, $scope, $lexer);
-        
+
         $result = $head->getLiterals();
-        
+
         foreach ($result as $value) {
             $this->assertTrue(!empty($value));
         }
     }
-    
-    public function testNonWhitespace()
+
+    public function testNonWhitespace(): void
     {
-        $lexer = new Lexer('\S');
-        $scope = new Scope();
-        $parser = new Short();
-        $head   = new LiteralScope('lit1', $scope);
-        
+        $lexer = new Kartigex\Lexer('\S');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\Short();
+        $head = new Kartigex\Generator\LiteralScope('lit1', $scope);
+
         $lexer->moveNext();
         $lexer->moveNext();
-        
+
         $parser->parse($head, $scope, $lexer);
-        
+
         $result = $head->getLiterals();
-        
+
         foreach ($result as $value) {
             $this->assertTrue(!empty($value));
         }
     }
-    
-    public function testWord()
+
+    public function testWord(): void
     {
-        $lexer = new Lexer('\w');
-        $scope = new Scope();
-        $parser = new Short();
-        $head   = new LiteralScope('lit1', $scope);
-        
+        $lexer = new Kartigex\Lexer('\w');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\Short();
+        $head = new Kartigex\Generator\LiteralScope('lit1', $scope);
+
         $lexer->moveNext();
         $lexer->moveNext();
-        
+
         $parser->parse($head, $scope, $lexer);
-        
+
         $result = $head->getLiterals();
-        
+
         foreach ($result as $value) {
             $this->assertRegExp('/\w/', $value);
         }
     }
-    
-    
-    public function testNonWord()
+
+    public function testNonWord(): void
     {
-         $lexer = new Lexer('\W');
-        $scope = new Scope();
-        $parser = new Short();
-        $head   = new LiteralScope('lit1', $scope);
-        
+        $lexer = new Kartigex\Lexer('\W');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\Short();
+        $head = new Kartigex\Generator\LiteralScope('lit1', $scope);
+
         $lexer->moveNext();
         $lexer->moveNext();
-        
+
         $parser->parse($head, $scope, $lexer);
-        
+
         $result = $head->getLiterals();
-        
+
         foreach ($result as $value) {
             $this->assertRegExp('/\W/', $value);
         }
     }
-  
-  
-  
-    public function testDotRange()
+
+    public function testDotRange(): void
     {
-        $lexer = new Lexer('.');
-        $scope = new Scope();
-        $parser = new Short();
-        $head   = new LiteralScope('lit1', $scope);
-        
+        $lexer = new Kartigex\Lexer('.');
+        $scope = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser\Short();
+        $head = new Kartigex\Generator\LiteralScope('lit1', $scope);
+
         $lexer->moveNext();
 
         $parser->parse($head, $scope, $lexer);
-        
+
         $result = $head->getLiterals();
-        
-        
+
         // match 0..127 char in ASSCI Chart
         $this->assertCount(128, $result);
     }
 }
-/* End of File */

@@ -1,7 +1,7 @@
 <?php
-namespace ReverseRegex\Test;
+namespace Kartavik\Kartigex\Test;
 
-use ReverseRegex\Lexer;
+use Kartavik\Kartigex\Lexer;
 
 class LexerTest extends Basic
 {

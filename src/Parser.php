@@ -28,19 +28,19 @@ class Parser
     /** @var Generator\Scope */
     protected $left;
 
+    private static $subParsers = [
+        'character' => Kartigex\Parser\CharacterClass::class,
+        'unicode' => Kartigex\Parser\Unicode::class,
+        'quantifer' => Kartigex\Parser\Quantifier::class,
+        'short' => Kartigex\Parser\Short::class,
+    ];
+
     public function __construct(Lexer $lexer, Generator\Scope $result, Generator\Scope $head = null)
     {
         $this->lexer = $lexer;
         $this->result = $result;
-
-        if ($head === null) {
-            $this->head = new Generator\Scope();
-        } else {
-            $this->head = $head;
-        }
-
+        $this->head = $head ?? new Generator\Scope();
         $this->result->attach($head);
-
         $this->left = $head;
     }
 
@@ -62,7 +62,7 @@ class Parser
                 $scope = null;
                 $parser = null;
 
-                if ($this->lexer->isNextToken(Lexer::T_GROUP_OPEN)) {
+                if ($this->lexer->isNextToken(Lexer::GROUP_OPEN)) {
                     # is the group character the first token? is the regex wrapped in brackets.
                     //if($this->lexer->token === null) {
                     //  continue;
@@ -73,91 +73,71 @@ class Parser
 
                     $this->left = $parser->parse()->getResult();
                     $this->head->attach($this->left);
-                } elseif ($this->lexer->isNextToken(Lexer::T_GROUP_CLOSE)) {
+                } elseif ($this->lexer->isNextToken(Lexer::GROUP_CLOSE)) {
                     break;
-                } elseif ($this->lexer->isNextTokenAny(array(Lexer::T_LITERAL_CHAR, Lexer::T_LITERAL_NUMERIC))) {
+                } elseif ($this->lexer->isNextTokenAny(array(Lexer::LITERAL_CHAR, Lexer::LITERAL_NUMERIC))) {
                     # test for literal characters (abcd)
                     $this->left = new Kartigex\Generator\LiteralScope();
                     $this->left->addLiteral($this->lexer->lookahead['value']);
                     $this->head->attach($this->left);
-                } elseif ($this->lexer->isNextToken(Lexer::T_SET_OPEN)) {
+                } elseif ($this->lexer->isNextToken(Lexer::SET_OPEN)) {
                     # character classes [a-z]
                     $this->left = new Kartigex\Generator\LiteralScope();
                     self::createSubParser('character')->parse($this->left, $this->head, $this->lexer);
                     $this->head->attach($this->left);
-                }
+                } elseif ($this->lexer->isNextTokenAny([
+                    Lexer::DOT,
+                    Lexer::SHORT_D,
+                    Lexer::SHORT_NOT_D,
+                    Lexer::SHORT_W,
+                    Lexer::SHORT_NOT_W,
+                    Lexer::SHORT_S,
+                    Lexer::SHORT_NOT_S
+                ])) {
+                    # match short (. \d \D \w \W \s \S)
+                    $this->left = new Kartigex\Generator\LiteralScope();
+                    self::createSubParser('short')->parse($this->left, $this->head, $this->lexer);
+                    $this->head->attach($this->left);
+                } elseif ($this->lexer->isNextTokenAny([
+                    Lexer::SHORT_P,
+                    Lexer::SHORT_UNICODE_X,
+                    Lexer::SHORT_X
+                ])) {
+                    # match short (\p{L} \x \X  )
+                    $this->left = new Kartigex\Generator\LiteralScope();
+                    self::createSubParser('unicode')->parse($this->left, $this->head, $this->lexer);
+                    $this->head->attach($this->left);
+                } elseif ($this->lexer->isNextTokenAny([
+                    Lexer::QUANTIFIER_OPEN,
+                    Lexer::QUANTIFIER_PLUS,
+                    Lexer::QUANTIFIER_QUESTION,
+                    Lexer::QUANTIFIER_STAR,
+                    Lexer::QUANTIFIER_OPEN
+                ])) {
+                    # match quantifiers
+                    self::createSubParser('quantifer')->parse($this->left, $this->head, $this->lexer);
+                } elseif ($this->lexer->isNextToken(Lexer::CHOICE_BAR)) {
+                    # match alternations
+                    $this->left = $this->head;
 
-                switch (true) {
-                    case ():
-
-
-
-                        break;
-                    case ($this->lexer->isNextTokenAny(array(
-                        Lexer::T_DOT,
-                        Lexer::T_SHORT_D,
-                        Lexer::T_SHORT_NOT_D,
-                        Lexer::T_SHORT_W,
-                        Lexer::T_SHORT_NOT_W,
-                        Lexer::T_SHORT_S,
-                        Lexer::T_SHORT_NOT_S
-                    ))):
-                        # match short (. \d \D \w \W \s \S)
-                        $this->left = new LiteralScope();
-                        self::createSubParser('short')->parse($this->left, $this->head, $this->lexer);
-                        $this->head->attach($this->left);
-
-
-                        break;
-                    case ($this->lexer->isNextTokenAny(array(
-                        Lexer::T_SHORT_P,
-                        Lexer::T_SHORT_UNICODE_X,
-                        Lexer::T_SHORT_X
-                    ))):
-                        # match short (\p{L} \x \X  )
-                        $this->left = new LiteralScope();
-                        self::createSubParser('unicode')->parse($this->left, $this->head, $this->lexer);
-                        $this->head->attach($this->left);
-
-
-                        break;
-                    case ($this->lexer->isNextTokenAny(array(
-                        Lexer::T_QUANTIFIER_OPEN,
-                        Lexer::T_QUANTIFIER_PLUS,
-                        Lexer::T_QUANTIFIER_QUESTION,
-                        Lexer::T_QUANTIFIER_STAR,
-                        Lexer::T_QUANTIFIER_OPEN
-                    ))):
-                        # match quantifiers
-                        self::createSubParser('quantifer')->parse($this->left, $this->head, $this->lexer);
-
-                        break;
-                    case ($this->lexer->isNextToken(Lexer::T_CHOICE_BAR)):
-                        # match alternations
-                        $this->left = $this->head;
-
-                        $this->head = new Scope();
-                        $this->result->useAlternatingStrategy();
-                        $this->result->attach($this->head);
-
-
-                        break;
-                    default:
-                        # ignore character
+                    $this->head = new Kartigex\Generator\Scope();
+                    $this->result->useAlternatingStrategy();
+                    $this->result->attach($this->head);
                 }
             }
-        } catch (ParserException $e) {
-            $pos = $this->lexer->lookahead['position'];
+        } catch (Exception $exception) {
+            $position = $this->lexer->lookahead['position'];
             $compressed = $this->compress();
-            throw new ParserException(sprintf('Error found STARTING at position %s after `%s` with msg %s ', $pos,
-                $compressed, $e->getMessage()));
+            $message = $exception->getMessage();
+
+            throw new Exception("Error found STARTING at position $position after $compressed with message: $message");
         }
 
         return $this;
     }
 
     /**
-     *  Compress the lexer into value string until current lookahead
+     * Compress the lexer into value string until current lookahead
      *
      * @access public
      * @return string the compressed value string
@@ -180,26 +160,18 @@ class Parser
         return $this->result;
     }
 
-    public static $subParsers = array(
-        'character' => '\\ReverseRegex\\Parser\\CharacterClass',
-        'unicode' => '\\ReverseRegex\\Parser\\Unicode',
-        'quantifer' => '\\ReverseRegex\\Parser\\Quantifier',
-        'short' => '\\ReverseRegex\\Parser\\Short'
-    );
-
     /**
-     *  Return an instance os subparser
+     * Return an instance os sub-parser
      *
-     * @access public
-     * @static
-     * @return ReverseRegex\Parser\StrategyInterface
+     * @param string $name
      *
-     * @param string $name the short name
+     * @return Parser\StrategyInterface
+     * @throws Exception
      */
-    static function createSubParser(string $name): StrategyInterface
+    static function createSubParser(string $name): Kartigex\Parser\StrategyInterface
     {
-        if (isset(self::$subParsers[$name]) === false) {
-            throw new Exception('Unknown subparser at ' . $name);
+        if (!self::$subParsers[$name]) {
+            throw new Exception('Unknown sub-parser at ' . $name);
         }
 
         if (is_object(self::$subParsers[$name]) === false) {

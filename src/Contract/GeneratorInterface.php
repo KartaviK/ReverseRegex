@@ -28,23 +28,13 @@ interface GeneratorInterface
      *
      * @param int $seed integer the seed to use
      */
-    public function seed(int $seed = 0): void;
+    public function seed(int $seed): void;
 
-    /**
-     * Return the highest possible value
-     *
-     * @param int $value
-     *
-     * @return int
-     */
-    public function max(int $value = 0): int;
+    public function setMax(int $value = 0);
 
-    /**
-     * Return the lowest possible value
-     *
-     * @param int $value
-     *
-     * @return int
-     */
-    public function min(int $value = 0): int;
+    public function getMax(): int;
+
+    public function setMin(int $value = 0): void;
+
+    public function getMin(): int;
 }

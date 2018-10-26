@@ -31,16 +31,16 @@ class Quantifier implements StrategyInterface
     public function parse(Scope $head, Scope $set, Lexer $lexer)
     {
         switch (true) {
-            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_PLUS)):
+            case ($lexer->isNextToken(Lexer::QUANTIFIER_PLUS)):
                 $head = $this->quantifyPlus($head, $set, $lexer);
                 break;
-            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_QUESTION)):
+            case ($lexer->isNextToken(Lexer::QUANTIFIER_QUESTION)):
                 $head = $this->quantifyQuestion($head, $set, $lexer);
                 break;
-            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_STAR)):
+            case ($lexer->isNextToken(Lexer::QUANTIFIER_STAR)):
                 $head = $this->quantifyStar($head, $set, $lexer);
                 break;
-            case ($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)):
+            case ($lexer->isNextToken(Lexer::QUANTIFIER_OPEN)):
                 $head = $this->quantifyClosure($head, $set, $lexer);
                 break;
             default:
@@ -133,8 +133,8 @@ class Quantifier implements StrategyInterface
 
         # move to the first token inside the quantifer.
         # parse for the minimum , move lookahead until read end of the closure or the `,`
-        while ($lexer->moveNext() === true && !$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE) && $lexer->lookahead['value'] !== ',') {
-            if ($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)) {
+        while ($lexer->moveNext() === true && !$lexer->isNextToken(Lexer::QUANTIFIER_CLOSE) && $lexer->lookahead['value'] !== ',') {
+            if ($lexer->isNextToken(Lexer::QUANTIFIER_OPEN)) {
                 throw new ParserException('Nesting Quantifiers is not allowed');
             }
             $tokens[] = $lexer->lookahead;
@@ -149,8 +149,8 @@ class Quantifier implements StrategyInterface
 
             # move to the first token after the `,` character
             # grab the remaining numbers
-            while ($lexer->moveNext() && !$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE)) {
-                if ($lexer->isNextToken(Lexer::T_QUANTIFIER_OPEN)) {
+            while ($lexer->moveNext() && !$lexer->isNextToken(Lexer::QUANTIFIER_CLOSE)) {
+                if ($lexer->isNextToken(Lexer::QUANTIFIER_OPEN)) {
                     throw new ParserException('Nesting Quantifiers is not allowed');
                 }
 
@@ -166,11 +166,11 @@ class Quantifier implements StrategyInterface
         $head->setMinOccurrences($min);
 
         # skip the lexer to the closing token
-        $lexer->skipUntil(Lexer::T_QUANTIFIER_CLOSE);
+        $lexer->skipUntil(Lexer::QUANTIFIER_CLOSE);
 
         # check if the last matched token was the closing bracket
         # not going to stop errors like {#####,###{[a-z]} {#####{[a-z]}
-        if (!$lexer->isNextToken(Lexer::T_QUANTIFIER_CLOSE)) {
+        if (!$lexer->isNextToken(Lexer::QUANTIFIER_CLOSE)) {
             throw new ParserException('Closing quantifier token `}` not found');
         }
 

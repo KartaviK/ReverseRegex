@@ -2,6 +2,8 @@
 
 namespace Kartavik\Kartigex\Random;
 
+use Kartavik\Kartigex\Infrastructure\BaseRandom;
+
 /**
  * Class MersenneRandom
  * @package Kartavik\Kartigex\Random
@@ -12,7 +14,7 @@ namespace Kartavik\Kartigex\Random;
  * @author Roman <KartaviK> Varkuta <roman.varkuta@gmail.com>
  * @link http://boxrefuge.com/?tag=random-number
  */
-class MersenneRandom implements GeneratorInterface
+class MersenneRandom extends BaseRandom
 {
     /** @var integer a seed use count */
     protected $index;
@@ -33,32 +35,6 @@ class MersenneRandom implements GeneratorInterface
     {
         $this->seed($seed);
         $this->index = -1;
-    }
-
-    public function max(int $value = null): int
-    {
-        if ($value === null && $this->max === null) {
-            $max = PHP_INT_MAX;
-        } elseif ($value === null) {
-            $max = $this->max;
-        } else {
-            $max = $this->max = $value;
-        }
-
-        return $max;
-    }
-
-    public function min(int $value = null): int
-    {
-        if ($value === null && $this->max === null) {
-            $min = 0;
-        } elseif ($value === null) {
-            $min = $this->min;
-        } else {
-            $min = $this->min = $value;
-        }
-
-        return $min;
     }
 
     public function generate(int $min = 0, int $max = null): int

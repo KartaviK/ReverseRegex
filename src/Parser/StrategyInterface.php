@@ -2,8 +2,7 @@
 
 namespace Kartavik\Kartigex\Parser;
 
-use Kartavik\Kartigex\Generator\Scope;
-use Kartavik\Kartigex\Lexer;
+use Kartavik\Kartigex;
 
 /**
  * Interface StrategyInterface
@@ -18,14 +17,13 @@ use Kartavik\Kartigex\Lexer;
 interface StrategyInterface
 {
     /**
-     *  Parse the current token and return a new head
+     * Parse the current token and return a new head
      *
-     * @access public
-     * @return ReverseRegex\Generator\Scope a new head
+     * @param Kartigex\Generator\Scope $head
+     * @param Kartigex\Generator\Scope $set
+     * @param Kartigex\Lexer $lexer
      *
-     * @param ReverseRegex\Generator\Scope $head
-     * @param ReverseRegex\Generator\Scope $set
-     * @param ReverseRegex\Lexer $lexer
+     * @return mixed
      */
-    public function parse(Scope $head, Scope $set, Lexer $lexer);
+    public function parse(Kartigex\Generator\Scope $head, Kartigex\Generator\Scope $set, Kartigex\Lexer $lexer);
 }

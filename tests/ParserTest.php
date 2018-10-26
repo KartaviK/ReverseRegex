@@ -1,115 +1,116 @@
 <?php
-namespace ReverseRegex\Test;
 
-use ReverseRegex\Lexer;
-use ReverseRegex\Parser;
-use ReverseRegex\Generator\Scope;
-use ReverseRegex\Random\MersenneRandom;
+namespace Kartavik\Kartigex\Test;
 
-class ParserTest extends Basic
+use Kartavik\Kartigex;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Class ParserTest
+ * @package Kartavik\Kartigex\Test
+ * @internal
+ */
+class ParserTest extends TestCase
 {
-    
-    public function testParserExampleA()
+    public function testParserExampleA(): void
     {
-        $lexer = new Lexer('ex1{5,5}');
-        $container = new Scope();
-        $head = new Scope();
-        $parser = new Parser($lexer, $container, $head);
+        $lexer = new Kartigex\Lexer('ex1{5,5}');
+        $container = new Kartigex\Generator\Scope();
+        $head = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
-        $random = new MersenneRandom(100);
+
+        $result = '';
+        $random = new Kartigex\Random\MersenneRandom(100);
         $generator->generate($result, $random);
-        
+
         $this->assertEquals('ex11111', $result);
     }
-    
-    
-    public function testParserExampleB()
+
+    public function testParserExampleB(): void
     {
         //$lexer = new Lexer('\(0[23478]\)-[0-9]{4} [0-9]{4}');
-        
-        $lexer = new Lexer('(\(0[23478]\)){4}');
-        
-        $container = new Scope();
-        $head = new Scope();
-        $parser = new Parser($lexer, $container, $head);
+
+        $lexer = new Kartigex\Lexer('(\(0[23478]\)){4}');
+
+        $container = new Kartigex\Generator\Scope();
+        $head = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
-        $random = new MersenneRandom(100);
+
+        $result = '';
+        $random = new Kartigex\Random\MersenneRandom(100);
         $generator->generate($result, $random);
-        
+
         $this->assertEquals('(02)(04)(02)(08)', $result);
     }
-    
+
     public function testExampleC()
     {
-        $lexer = new Lexer('509[0-9][A-K]');
-        $container = new Scope();
-        $head = new Scope();
-        $parser = new Parser($lexer, $container, $head);
+        $lexer = new Kartigex\Lexer('509[0-9][A-K]');
+        $container = new Kartigex\Generator\Scope();
+        $head = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
-        $random = new MersenneRandom(100);
-        
+
+        $result = '';
+        $random = new Kartigex\Random\MersenneRandom(100);
+
         $generator->generate($result, $random);
         $this->assertEquals('5090J', $result);
     }
-    
-    
-    public function testExampleD()
+
+    public function testExampleD(): void
     {
-        $lexer = new Lexer('\d\d\d');
-        $container = new Scope();
-        $head = new Scope();
-        $parser = new Parser($lexer, $container, $head);
+        $lexer = new Kartigex\Lexer('\d\d\d');
+        $container = new Kartigex\Generator\Scope();
+        $head = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
-        $random = new MersenneRandom(100);
-        
+
+        $result = '';
+        $random = new Kartigex\Random\MersenneRandom(100);
+
         $generator->generate($result, $random);
         $this->assertRegExp('/\d\d\d/', $result);
     }
-    
+
     public function testExampleE()
     {
-        $lexer = new Lexer('\d\d\d([a-zA-Z])\w.');
-        $container = new Scope();
-        $head = new Scope();
-        $parser = new Parser($lexer, $container, $head);
+        $lexer = new Kartigex\Lexer('\d\d\d([a-zA-Z])\w.');
+        $container = new Kartigex\Generator\Scope();
+        $head = new Kartigex\Generator\Scope();
+        $parser = new Kartigex\Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
+
+        $result = '';
         $random = new MersenneRandom(10034343);
-        
+
         $generator->generate($result, $random);
         $this->assertRegExp('/\d\d\d([a-zA-Z])\w./', $result);
     }
-    
+
     public function testParserExamplePhoneNumber()
     {
         $lexer = new Lexer('\(0[23478]\)[0-9]{4}-[0-9]{4}');
-        
+
         $container = new Scope();
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
+
+        $result = '';
         $random = new MersenneRandom(100);
         $generator->generate($result, $random);
-        
+
         $this->assertEquals('(02)2595-1288', $result);
     }
-    
-    
+
+
     public function testParserExamplePostCode()
     {
         # Australian Post Codes.
-        
+
         # ACT: 0200-0299 and 2600-2639.
         # NSW: 1000-1999, 2000-2599 and 2640-2914.
         # NT:  0900-0999 and 0800-0899.
@@ -118,59 +119,59 @@ class ParserTest extends Basic
         # TAS: 7800-7999 and 7000-7499.
         # VIC: 8000-8999 and 3000-3999.
         # WA: 6800-6999 and 6000-6799
-        
-        
+
+
         $lexer = new Lexer("(0[289][0-9]{2})|([1345689][0-9]{3})|(2[0-8][0-9]{2})|(290[0-9])|(291[0-4])|(7[0-4][0-9]{2})|(7[8-9][0-9]{2})");
         $container = new Scope();
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
+
         $random = new MersenneRandom(10789);
-        
+
         for ($i = 100; $i > 0; $i--) {
-            $result ='';
+            $result = '';
             $generator->generate($result, $random);
-            $this->assertRegExp('/^(0[289][0-9]{2})|([1345689][0-9]{3})|(2[0-8][0-9]{2})|(290[0-9])|(291[0-4])|(7[0-4][0-9]{2})|(7[8-9][0-9]{2})$/', $result);
+            $this->assertRegExp('/^(0[289][0-9]{2})|([1345689][0-9]{3})|(2[0-8][0-9]{2})|(290[0-9])|(291[0-4])|(7[0-4][0-9]{2})|(7[8-9][0-9]{2})$/',
+                $result);
         }
-        
+
         # Generate Postcode for ACT only
-        
+
         $lexer = new Lexer('02[0-9]{2}|26[0-3][0-9]');
         $container = new Scope();
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
+
+        $result = '';
         $random = new MersenneRandom(100);
-        
+
         $generator->generate($result, $random);
         $this->assertEquals('0225', $result);
-        
-        $result ='';
+
+        $result = '';
         $generator->generate($result, $random);
         $this->assertEquals('2631', $result);
-        
-        $result ='';
+
+        $result = '';
         $generator->generate($result, $random);
         $this->assertEquals('0288', $result);
-        
-        $result ='';
+
+        $result = '';
         $generator->generate($result, $random);
         $this->assertEquals('0243', $result);
-        
-        $result ='';
+
+        $result = '';
         $generator->generate($result, $random);
         $this->assertEquals('0284', $result);
-        
-        $result ='';
+
+        $result = '';
         $generator->generate($result, $random);
         $this->assertEquals('0210', $result);
     }
-    
-    
-    
+
+
     public function testHellowWorld()
     {
         $lexer = new Lexer("Hello|World|Is|Good");
@@ -178,80 +179,82 @@ class ParserTest extends Basic
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
+
         $random = new MersenneRandom(10789);
-        
+
         for ($i = 10; $i > 0; $i--) {
-            $result ='';
+            $result = '';
             $generator->generate($result, $random);
             $this->assertRegExp('/^Hello|World|Is|Good$/', $result);
         }
     }
-    
-    
+
+
     public function testLimitingQuantifer()
     {
-        
+
         $lexer = new Lexer("(Hello){5,9}");
         $container = new Scope();
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
+
         $random = new MersenneRandom(10789);
-        
+
         for ($i = 10; $i > 0; $i--) {
-            $result ='';
+            $result = '';
             $generator->generate($result, $random);
             $this->assertRegExp('/(Hello){5,9}/', $result);
         }
-        
+
         $lexer = new Lexer("(Hello)?");
         $container = new Scope();
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
+
         $random = new MersenneRandom(107559);
-      
-        
-        $result ='';
+
+
+        $result = '';
         $generator->generate($result, $random);
         $this->assertRegExp('/(Hello)?/', $result);
     }
-    
+
     /**
-      *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Error found STARTING at position 3 after `\(0[` with msg Negated Character Set ranges not supported at this time
-      */
+     * @expectedException \ReverseRegex\Exception
+     * @expectedExceptionMessage Error found STARTING at position 3 after `\(0[` with msg Negated Character Set ranges
+     *     not supported at this time
+     */
     public function testParserLexerError()
     {
         $lexer = new Lexer('\(0[^23478]\)[0-9]{4}-[0-9]{4}');
-        
+
         $container = new Scope();
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
+
+        $result = '';
         $random = new MersenneRandom(100);
         $generator->generate($result, $random);
     }
-    
+
     /**
-      *  @expectedException \ReverseRegex\Exception
-      *  @expectedExceptionMessage Error found STARTING at position 16 after `\(0[23478]\)[9-4]` with msg Character class range 9 - 4 is out of order
-      */
+     * @expectedException \ReverseRegex\Exception
+     * @expectedExceptionMessage Error found STARTING at position 16 after `\(0[23478]\)[9-4]` with msg Character class
+     *     range 9 - 4 is out of order
+     */
     public function testParserLexerErrorB()
     {
         $lexer = new Lexer('\(0[23478]\)[9-4]{4}-[0-9]{4}');
-        
+
         $container = new Scope();
         $head = new Scope();
         $parser = new Parser($lexer, $container, $head);
         $generator = $parser->parse()->getResult();
-        
-        $result ='';
+
+        $result = '';
         $random = new MersenneRandom(100);
         $generator->generate($result, $random);
     }
